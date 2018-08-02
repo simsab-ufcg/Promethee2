@@ -1,0 +1,2 @@
+g++ -std=c++14 promethee/*.cpp  -o promethee/execute
+./promethee/execute "$@"
