@@ -6,6 +6,7 @@
     void addCriteria(ldouble weight, Matrix matrix);
     Matrix getCriteriaMatrix(int index);
     ldouble getCriteriaWeight(int index);
+    MaskMatrix getMaskMatrix();
   };
 #endif
 #define DATA_INCLUDED

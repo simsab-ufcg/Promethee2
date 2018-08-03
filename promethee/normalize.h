@@ -1,6 +1,4 @@
-#ifndef TYPES_INCLUDED
-  #include "types.h"
-#endif
+#include "types.h"
 struct Normalizer {
-  Matrix normalize(Matrix matrix);
+  Matrix normalize(Matrix matrix, MaskMatrix validPixels);
 };

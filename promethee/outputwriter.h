@@ -2,5 +2,5 @@
 #include <fstream>
 #include <iomanip>
 struct OutputWriter{
-  void write(string path, vector<Matrix> result);
+  void write(string path, PrometheeResult result);
 };
