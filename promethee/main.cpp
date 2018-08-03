@@ -17,7 +17,8 @@ int main(int argc, char *argv[]){
     data.addCriteria(weight, nmatrix);
   }
   Promethee promethee = Promethee();
-  vector<Matrix> output = promethee.process(data);
+  vector<Matrix> result = promethee.process(data);
   OutputWriter outputWriter = OutputWriter();
+  outputWriter.write(pathToOutputDirectory, result);
   return 0;
 }
