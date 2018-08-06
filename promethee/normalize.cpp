@@ -4,6 +4,8 @@ Matrix Normalizer::normalize(Matrix matrix, MaskMatrix validPixels){
   int ncolumns = matrix[0].size();
   int posx_min = -1, posy_min = -1;
   int posx_max = -1, posy_max = -1;
+
+  // getting min and max value in the given matrix (to be used in normalization)
   for(int i = 0; i < nlines; i++)
     for(int j = 0; j < ncolumns; j++){
       if(validPixels[i][j]){
@@ -29,6 +31,8 @@ Matrix Normalizer::normalize(Matrix matrix, MaskMatrix validPixels){
   ldouble max_value = matrix[posx_max][posy_max];
   ldouble min_value = matrix[posx_min][posy_min];
   Matrix normalized = matrix;
+
+  // generating matrix of normalized values
   for(int i = 0; i < nlines; i++)
     for(int j = 0; j < ncolumns; j++)
       if(validPixels[i][j])
