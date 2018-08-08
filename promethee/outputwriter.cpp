@@ -1,11 +1,13 @@
 #include "outputwriter.h"
+
+// This method has many parameters, TODO
 void showMatrix(string path, int nlines, int ncolumns, int start_line, int start_column, int precision, Matrix matrix, MaskMatrix mask, int grow){
   ofstream out(path);
   out << fixed << setprecision(precision);
   for(int line = start_line; line < nlines + grow; line++)
     for(int column = start_column; column < ncolumns + grow; column++){
       if(line < nlines && column < ncolumns){
-        if(matrix[line][column] < 0)
+        if(!mask[line][column])
           out << "nan";
         else
           out << matrix[line][column];
