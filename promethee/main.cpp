@@ -11,7 +11,6 @@ const string pathToInputDirectory = "promethee/input/";
 const string pathToOutputDirectory = "promethee/output/";
 int main(int argc, char *argv[]){
   // argv in format (name_of_file, weight)
-  cerr << "[main] begin" << endl;
   Data data = Data();
   InputReader inputReader = InputReader();
 
@@ -23,7 +22,6 @@ int main(int argc, char *argv[]){
     Matrix nmatrix = inputReader.readMatrix(pathToInputDirectory + fileName);
     MatrixMetaData metaData = inputReader.readMetaData(pathToInputDirectory + fileName + "_p");
 
-    metaData.show();
     // reading the criteria weight
     ldouble weight = atof(argv[i + 1]);
 

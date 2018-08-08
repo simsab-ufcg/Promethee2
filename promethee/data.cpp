@@ -10,11 +10,11 @@ Matrix Data::getCriteriaMatrix(int index){
 ldouble Data::getCriteriaWeight(int index){
   return weights[index];
 }
-ldouble Data::getPValue(int index){
-  return metaData[index].pParameter;
-}
 bool Data::getIsMax(int index){
   return metaData[index].isMax;
+}
+PrometheeFunction* Data::getFunction(int index){
+  return metaData[index].function;
 }
 void Data::normalizeWeights(){
   ldouble weightsSum = 0;

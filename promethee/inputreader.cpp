@@ -20,9 +20,10 @@ MatrixMetaData InputReader::readMetaData(string path){
   MatrixMetaData meta;
   string funType;
   in >> funType;
+  ldouble pParameter;
+  in >> pParameter;
   // only linear by now
-  meta.function = new LinearFunction();
-  in >> meta.pParameter;
+  meta.function = new LinearFunction(pParameter);
   in >> meta.isMax;
   meta.name = path;
   return meta;

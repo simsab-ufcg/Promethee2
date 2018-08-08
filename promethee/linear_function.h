@@ -1,6 +1,13 @@
 #include "promethee_function.h"
 
 struct LinearFunction : PrometheeFunction {
-    ldouble getPositiveFlow(vector<ldouble> & values, ldouble queryValue);
-    ldouble getNegativeFlow(vector<ldouble> & values, ldouble queryValue);
+    ldouble pParameter;
+    LinearFunction(ldouble pParameter): PrometheeFunction(){
+        this->pParameter = pParameter;
+    }
+    ldouble getPositiveDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight) override;
+    ldouble getNegativeDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight) override;
+    ldouble getPParameter(){
+        return pParameter;
+    }
 };

@@ -1,6 +1,7 @@
 #ifndef DATA_INCLUDED
   #include "types.h"
   #include "matrix_meta_data.h"
+  #include "promethee_function.h"
   struct Data{
     vector<Matrix> matrices;
     vector<ldouble> weights;
@@ -8,7 +9,7 @@
     void addCriteria(ldouble weight, Matrix matrix, MatrixMetaData meta);
     Matrix getCriteriaMatrix(int index);
     ldouble getCriteriaWeight(int index);
-    ldouble getPValue(int index);
+    PrometheeFunction* getFunction(int index);
     bool getIsMax(int index);
     void normalizeWeights();
     MaskMatrix getMaskMatrix();

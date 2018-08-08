@@ -5,12 +5,8 @@
     #include <iostream>
     struct MatrixMetaData{
         PrometheeFunction* function;
-        ldouble pParameter;
         bool isMax;
         string name;
-        void show(){
-            cerr << name << " " << isMax << " " << pParameter << endl;
-        }
     };
 #endif
 #define MATRIX_META_DATA_INCLUDED

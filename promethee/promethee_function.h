@@ -1,9 +1,11 @@
 #ifndef PROMETHEE_FUN
     #include <vector>
     #include "types.h"
+    #include <algorithm>
+    using namespace std;
     struct PrometheeFunction {
-        ldouble getPositiveFlow(vector<ldouble> & values, ldouble queryValue);
-        ldouble getNegativeFlow(vector<ldouble> & values, ldouble queryValue);
+        virtual ldouble getPositiveDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight);
+        virtual ldouble getNegativeDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight);
     };
 #endif
 #define PROMETHEE_FUN

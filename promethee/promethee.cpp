@@ -1,5 +1,6 @@
 #include "promethee.h"
 #include "normalize.h"
+#include "promethee_function.h"
 #include <iostream>
 PrometheeResult Promethee::process(Data data){
   
@@ -19,7 +20,7 @@ PrometheeResult Promethee::process(Data data){
 
     Matrix matrix = data.getCriteriaMatrix(criteria);
     ldouble weight = data.getCriteriaWeight(criteria);
-    ldouble pvalue = data.getPValue(criteria);
+    PrometheeFunction* function = data.getFunction(criteria);
     bool isMax = data.getIsMax(criteria);
     vector<ldouble> values;
 
@@ -41,78 +42,14 @@ PrometheeResult Promethee::process(Data data){
       for(int column = 0; column < ncolumns; column++){
         if(validPixels[line][column]){
 
-          for(auto v : values){
-            continue;
-            ldouble diff = matrix[line][column] - v;
-            diff = min(diff, pvalue);
-            diff = max(diff, -pvalue);
-            if(isMax){
-              if(diff > 0)
-                positiveFlow[line][column] += weight * diff / pvalue;
-              else
-                negativeFlow[line][column] += - weight * diff / pvalue;
-            } else {
-              if(diff < 0)
-                positiveFlow[line][column] += - weight * diff / pvalue;
-              else
-                negativeFlow[line][column] += weight * diff / pvalue;
-            }
+          if(isMax){
+            positiveFlow[line][column] += (*function).getPositiveDelta(values, matrix[line][column], cummulative, weight);
+            negativeFlow[line][column] += (*function).getNegativeDelta(values, matrix[line][column], cummulative, weight);
+          } else {
+            negativeFlow[line][column] += (*function).getPositiveDelta(values, matrix[line][column], cummulative, weight);
+            positiveFlow[line][column] += (*function).getNegativeDelta(values, matrix[line][column], cummulative, weight);
           }
-          // continue;
-          {
-            int ptr = lower_bound(values.begin(), values.end(), matrix[line][column] - pvalue) - values.begin();
-            ldouble value = weight * ptr;
-            if(line + column == 0) cout << value << " ";
-            if(isMax)
-              positiveFlow[line][column] += value;
-            else
-              negativeFlow[line][column] += value;
-          }
-          {
-            int ptr = lower_bound(values.begin(), values.end(), matrix[line][column]) - values.begin();
-            int ptr2 = lower_bound(values.begin(), values.end(), matrix[line][column] - pvalue) - values.begin();
-            int amount = ptr - ptr2;
-            if(amount > 0){
-              ldouble value = 0;
-              if(ptr > 0) value += cummulative[ptr - 1];
-              if(ptr2 > 0) value -= cummulative[ptr2 - 1];
-              ldouble fvalue = weight * (amount * matrix[line][column] - value) / pvalue;
-              if(line + column == 0)cout << fvalue << " ";
-              if(isMax)
-                positiveFlow[line][column] += fvalue;
-              else
-                negativeFlow[line][column] += fvalue;
-              
-            }
-          }
-          {
-            int ptr = upper_bound(values.begin(), values.end(), matrix[line][column] + pvalue) - values.begin();
-            if(ptr < nvalues){
-              ldouble value = weight * (nvalues - ptr);
-              if(line + column == 0)cout << value << " ";
-              if(isMax)
-                negativeFlow[line][column] += value;
-              else
-                positiveFlow[line][column] += value;
-            }
-          }
-          {
-            int ptr = upper_bound(values.begin(), values.end(), matrix[line][column]) - values.begin();
-            int ptr2 = upper_bound(values.begin(), values.end(), matrix[line][column] + pvalue) - values.begin();
-            int amount = ptr2 - ptr;
-            if(amount > 0){
-              ldouble value = 0;
-              if(ptr2 > 0) value += cummulative[ptr2 - 1];
-              if(ptr > 0) value -= cummulative[ptr - 1];
-              ldouble fvalue = weight * (value - amount * matrix[line][column]) / pvalue;
-              if(line + column == 0)cout << fvalue << " ";
-              if(isMax)
-                negativeFlow[line][column] += fvalue;
-              else
-                positiveFlow[line][column] += fvalue;          
-            }
-          }
-          if(line + column == 0) cout << endl;
+
         }
       }
     }
