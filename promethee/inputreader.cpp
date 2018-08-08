@@ -19,12 +19,16 @@ MatrixMetaData InputReader::readMetaData(string path){
   ifstream in(path);
   MatrixMetaData meta;
   string funType;
-  in >> funType;
   ldouble pParameter;
-  in >> pParameter;
+  if(in >> funType){
+    in >> meta.isMax;
+    in >> pParameter;
+  } else {
+    meta.isMax = true;
+    pParameter = 1.0;
+  }
+  meta.name = path;
   // only linear by now
   meta.function = new LinearFunction(pParameter);
-  in >> meta.isMax;
-  meta.name = path;
   return meta;
 }
