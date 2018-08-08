@@ -1,5 +1,6 @@
 #ifndef TYPES_INCLUDED
   #include <vector>
+  // #include "promethee_function.h"
   
   using namespace std;
   
@@ -12,7 +13,7 @@
   using MaskMatrixLine = vector<bool>;
   
   using MaskMatrix = vector<MaskMatrixLine>;
-  
+
   struct PrometheeResult{
     Matrix positiveFlow;
     Matrix negativeFlow;
