@@ -21,8 +21,8 @@ MatrixMetaData InputReader::readMetaData(string path){
   string funType;
   ldouble pParameter;
   if(in >> funType){
-    in >> meta.isMax;
     in >> pParameter;
+    in >> meta.isMax;
   } else {
     meta.isMax = true;
     pParameter = 1.0;
