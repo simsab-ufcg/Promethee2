@@ -31,7 +31,7 @@ This example corresponds to the default values of the file.
 ## How to run
 Put your files in promethee/input and execute the following commands in terminal
 ```
-chmod +x run
+make
 ./run name_file1 weight1 name_file2 weight2 ...
 ```
 The result will be put in promethee/output
