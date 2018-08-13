@@ -1,4 +1,7 @@
 #ifndef TYPES_INCLUDED
+
+  #define TYPES_INCLUDED
+  
   #include <vector>
   // #include "promethee_function.h"
   
@@ -23,4 +26,3 @@
   };
 
 #endif
-#define TYPES_INCLUDED
