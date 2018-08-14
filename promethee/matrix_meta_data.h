@@ -11,6 +11,7 @@
         PrometheeFunction* function;
         bool isMax;
         string name;
+        double weight;
     };
 
 #endif

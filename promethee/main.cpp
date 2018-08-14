@@ -15,7 +15,7 @@ int main(int argc, char *argv[]){
   InputReader inputReader = InputReader();
 
   // return 0;
-  for(int i = 1; i < argc; i += 2){
+  for(int i = 1; i < argc; i += 1){
     string fileName(argv[i]);
 
     // reading matrix of values in which each cell represent the pixel's value for a certain criteria
@@ -23,9 +23,9 @@ int main(int argc, char *argv[]){
     MatrixMetaData metaData = inputReader.readMetaData(pathToInputDirectory + fileName + "_p");
 
     // reading the criteria weight
-    ldouble weight = atof(argv[i + 1]);
+    // ldouble weight = atof(argv[i + 1]);
 
-    data.addCriteria(weight, nmatrix, metaData);
+    data.addCriteria(nmatrix, metaData);
   }
 
   data.normalizeWeights();
