@@ -5,10 +5,10 @@ Implementation of Promethee with optimization O(qnlog(n)) following [this](https
 ## Performance Plot O(qnlog(n)) x O(qn²)
 
 ![Optimization x Vanilla Plot](assets/Rplot.png?raw=true "Performance Plot")<br>
-```
-red: O(qn²) [Our implementation](https://github.com/simsab-ufcg/promethee-vanilla)
-gree: O(qnlog(n)) This implementation
-```
+
+red: O(qn²) [Our implementation](https://github.com/simsab-ufcg/promethee-vanilla)<br>
+green: O(qnlog(n)) This implementation
+
 
 ## Accepted format
 
