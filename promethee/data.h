@@ -9,10 +9,9 @@
   struct Data{
   
     vector<Matrix> matrices;
-    vector<ldouble> weights;
     vector<MatrixMetaData> metaData;
   
-    void addCriteria(ldouble weight, Matrix matrix, MatrixMetaData meta);
+    void addCriteria(Matrix matrix, MatrixMetaData meta);
   
     Matrix getCriteriaMatrix(int index);
   

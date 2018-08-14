@@ -20,10 +20,13 @@ MatrixMetaData InputReader::readMetaData(string path){
   MatrixMetaData meta;
   string funType;
   ldouble pParameter;
-  if(in >> funType){
+  if(in >> meta.weight){
+    in >> funType;
     in >> pParameter;
     in >> meta.isMax;
   } else {
+    meta.weight = 1.0;
+    funType = "linear";
     meta.isMax = true;
     pParameter = 1.0;
   }
