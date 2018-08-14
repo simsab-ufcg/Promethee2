@@ -1,5 +1,6 @@
 #include "promethee.h"
 #include "normalize.h"
+#include "promethee_function.h"
 #include <iostream>
 PrometheeResult Promethee::process(Data data){
   
@@ -19,6 +20,8 @@ PrometheeResult Promethee::process(Data data){
 
     Matrix matrix = data.getCriteriaMatrix(criteria);
     ldouble weight = data.getCriteriaWeight(criteria);
+    PrometheeFunction* function = data.getFunction(criteria);
+    bool isMax = data.getIsMax(criteria);
     vector<ldouble> values;
 
     for(int line = 0; line < nlines; line++)
@@ -35,30 +38,22 @@ PrometheeResult Promethee::process(Data data){
     for(int i = 1; i < nvalues; i++)
       cummulative[i] = cummulative[i - 1] + values[i];
 
-    for(int line = 0; line < nlines; line++)
+    for(int line = 0; line < nlines; line++){
       for(int column = 0; column < ncolumns; column++){
         if(validPixels[line][column]){
-          {
-            int ptr = lower_bound(values.begin(), values.end(), matrix[line][column]) - values.begin();
-            if(ptr > 0) {
-              positiveFlow[line][column] += weight * (ptr * matrix[line][column] - cummulative[ptr - 1]);
-            }
+
+          if(isMax){
+            positiveFlow[line][column] += (*function).getPositiveDelta(values, matrix[line][column], cummulative, weight);
+            negativeFlow[line][column] += (*function).getNegativeDelta(values, matrix[line][column], cummulative, weight);
+          } else {
+            negativeFlow[line][column] += (*function).getPositiveDelta(values, matrix[line][column], cummulative, weight);
+            positiveFlow[line][column] += (*function).getNegativeDelta(values, matrix[line][column], cummulative, weight);
           }
-          {
-            int ptr = upper_bound(values.begin(), values.end(), matrix[line][column]) - values.begin();
-            if(ptr < nvalues){
-              ldouble cummulativePart = cummulative[nvalues - 1];
-              if(ptr > 0)
-                cummulativePart -= cummulative[ptr - 1];
-              negativeFlow[line][column] += weight * (cummulativePart - (nvalues - ptr) * matrix[line][column]);
-            }
-          } 
-        } else {
-          // TODO
-          // to be decided how to deal with not valid pixels
+
         }
       }
-  } 
+    }
+  }
 
   // applying a not standard normalization (but used by grass)
   for(int line = 0; line < nlines; line++)
