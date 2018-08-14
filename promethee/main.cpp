@@ -9,8 +9,11 @@
 #include <dirent.h>
 using namespace std;
 const string pathToInputDirectory = "promethee/input/";
-const string pathToOutputDirectory = "promethee/output/";
+
 int main(int argc, char *argv[]){
+
+  const string pathToOutputDirectory(argv[3]);
+
   // argv in format (name_of_file, weight)
   Data data = Data();
   InputReader inputReader = InputReader();
