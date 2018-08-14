@@ -48,8 +48,8 @@ int main(int argc, char *argv[]){
   sort(valFiles.begin(), valFiles.end());
   sort(metaFiles.begin(), metaFiles.end());
 
-  if(valFiles.size() != metaFiles.size()) { // files dont match
-    cout << "error\n";
+  if(valFiles != metaFiles) { // files dont match
+    cout << "Error: not every file has its metadata accordingly or vice versa\n";
     return 0;
   }
 
