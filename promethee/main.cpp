@@ -32,7 +32,7 @@ int main(int argc, char *argv[]){
 
   auto endsWith = [](string text, string pattern){
     bool result = false;
-    if(text.size() >= pattern.size()){ 
+    if(text.size() > pattern.size()){ 
       string match = text.substr(text.size() - pattern.size(), pattern.size());
       if(match == pattern)
         result = true;
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
         file = file.substr(0, file.size() - suffix.size());
 
     } else {
-      cerr << "Directory " << directoryName << endl;
+      cerr << "Directory " << directoryName.substr(0, directoryName.size() - 1) << " not found" << endl;
       exit(0);
     }
     
