@@ -9,9 +9,17 @@
 #include <dirent.h>
 using namespace std;
 
+
 int main(int argc, char *argv[]){
 
-  const string pathToOutputDirectory(argv[3]);
+  const string INPUT_FILE_SUFFIX = ".input";
+  const string META_FILE_SUFFIX = ".meta";
+
+  const int INPUT_DIRECTORY_INDEX = 1;
+  const int META_DIRECTORY_INDEX = 2;
+  const int OUTPUT_DIRECTORY_INDEX = 3;
+
+  const string PATH_TO_OUTPUT_DIRECTORY(argv[OUTPUT_DIRECTORY_INDEX]);
 
   // argv in format (name_of_file, weight)
   Data data = Data();
@@ -22,27 +30,62 @@ int main(int argc, char *argv[]){
   DIR           *dirp;
   struct dirent *directory;
 
-  for (int i = 1; i < argc; i++) {
-    
-    dirp = opendir(argv[i]);
-    if (dirp) {   
-      while ((directory = readdir(dirp)) != NULL) {
-
-        string fileName(directory->d_name);
-        if(fileName != "." && fileName != ".." && fileName != ".DS_Store") {
-          if (i == 1) {                     // path to values must be the first one
-            valFiles.push_back(fileName);
-          } else if (i == 2) {              // path to metadata must be the second one
-            metaFiles.push_back(fileName);
-          } 
-        }
-      }
-      closedir(dirp);
-    } else {
-      cout << "Directory " << argv[i] << "not found " << endl;
-      return 0;
+  auto endsWith = [](string text, string pattern){
+    bool result = false;
+    if(text.size() >= pattern.size()){ 
+      string match = text.substr(text.size() - pattern.size(), pattern.size());
+      if(match == pattern)
+        result = true;
     }
-  }
+    return result;
+  };
+
+  auto readFiles = [](DIR* dir){
+    vector<string> fileNames;
+    struct dirent * directory;
+    while((directory = readdir(dir)) != NULL){
+      string fileName(directory->d_name);
+      fileNames.push_back(fileName);
+    }
+    return fileNames;
+  };
+
+  auto filterDirectoryFiles = [readFiles, endsWith](string directoryName, string suffix){
+    DIR* dirp = opendir(directoryName.c_str());
+    vector<string> files;
+    
+    if(dirp){
+      
+      files = readFiles(dirp);
+      
+      auto iterator = remove_if(files.begin(), files.end(), [endsWith, suffix](string fileName){
+        return ! endsWith(fileName, suffix);
+      });
+      
+      files.erase(iterator, files.end());
+      
+      for(string & file : files)
+        file = file.substr(0, file.size() - suffix.size());
+
+    } else {
+      cerr << "Directory " << directoryName << endl;
+      exit(0);
+    }
+    
+    closedir(dirp);
+    return files;
+  };
+
+  /* input directory */ 
+  string inputDirectory(argv[INPUT_DIRECTORY_INDEX]);
+  valFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
+
+  /* meta directory */ 
+  string metaDirectory(argv[META_DIRECTORY_INDEX]);
+  metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
+
+  /* output directory */
+  filterDirectoryFiles(PATH_TO_OUTPUT_DIRECTORY, "");
 
   sort(valFiles.begin(), valFiles.end());
   sort(metaFiles.begin(), metaFiles.end());
@@ -52,18 +95,17 @@ int main(int argc, char *argv[]){
     return 0;
   }
 
-  // return 0;
   for(int i = 0; i < valFiles.size(); i++){
-    string valuePath(argv[1]);
-    string metaPath(argv[2]);
 
+    string inputFile = inputDirectory + valFiles[i] + INPUT_FILE_SUFFIX;
+    string metaFile = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
 
-    cout << valuePath + valFiles[i] << endl;
-    cout << metaPath + metaFiles[i] << endl;
+    cerr << "reading " << inputFile << endl;
+    cerr << "reading " << metaFile << endl;
 
     // reading matrix of values in which each cell represent the pixel's value for a certain criteria
-    Matrix nmatrix = inputReader.readMatrix(valuePath + valFiles[i]);
-    MatrixMetaData metaData = inputReader.readMetaData(metaPath + metaFiles[i]);
+    Matrix nmatrix = inputReader.readMatrix(inputFile);
+    MatrixMetaData metaData = inputReader.readMetaData(metaFile);
 
     // reading the criteria weight
     // ldouble weight = atof(argv[i + 1]);
@@ -80,6 +122,6 @@ int main(int argc, char *argv[]){
   OutputWriter outputWriter = OutputWriter();
 
   // storing the generated result
-  outputWriter.write(pathToOutputDirectory, result);
+  outputWriter.write(PATH_TO_OUTPUT_DIRECTORY, result);
   return 0;
 }
