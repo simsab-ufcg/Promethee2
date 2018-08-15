@@ -1,6 +1,5 @@
 #include "outputwriter.h"
 
-// This method has many parameters, TODO
 void showMatrix(string path, int precision, Matrix matrix, MaskMatrix mask){
   
   int nlines = matrix.size();
