@@ -3,7 +3,7 @@
   #define TYPES_INCLUDED
   
   #include <vector>
-  // #include "promethee_function.h"
+  #include <limits>
   
   using namespace std;
   
@@ -16,6 +16,8 @@
   using MaskMatrixLine = vector<bool>;
   
   using MaskMatrix = vector<MaskMatrixLine>;
+
+  const ldouble NAN = std::numeric_limits<ldouble>::quiet_NaN();
 
   struct PrometheeResult{
     Matrix positiveFlow;

@@ -8,7 +8,6 @@
 #include <iostream>
 #include <dirent.h>
 using namespace std;
-const string pathToInputDirectory = "promethee/input/";
 
 int main(int argc, char *argv[]){
 
