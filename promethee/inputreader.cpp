@@ -1,16 +1,24 @@
 #include "inputreader.h"
 #include "linear_function.h"
 #include <iostream>
+#include <limits>
+#include <cmath>
 Matrix InputReader::readMatrix(string path){
   ifstream in(path);
   Matrix matrix;
   string line;
   while(getline(in, line)){
     stringstream lineReader(line);
+    string token;
     ldouble value;
     MatrixLine nline;
-    while(lineReader >> value)
+    while(lineReader >> token){
+      if(token == "nan")
+        value = NAN;
+      else
+        value = atof(token.c_str());
       nline.push_back(value);
+    }
     matrix.push_back(nline);
   }
   return matrix;
