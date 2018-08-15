@@ -15,9 +15,9 @@ n -> Alternatives
 
 You should use 2 folders to represent criterions input/ and meta/. <br><br>
 Input folder must be filled with files that represent a alternative value for each criterion, this file following this pattern: <br>
-NAME_OF_CRITERION --- the data of every alternative in that specific criterion in matrix format.<br>
+NAME_OF_CRITERION.input --- the data of every alternative in that specific criterion in matrix format.<br>
 All files must be matrix with same size.<br><br>
-Meta folder must de filled with parameters specification for each preference function that will be used in each criterion, this files must have the same name of the respective criterion in input folder.<br>
+Meta folder must be filled with parameters specification for each preference function that will be used in each criterion, this files must have the same name of the respective criterion in input folder but .meta extension instead of .input.<br>
 
 ### Function and parameters specification
 
