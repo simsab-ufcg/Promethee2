@@ -7,14 +7,16 @@ Implementation of Promethee with optimization O(qnlog(n)) following [this](https
 ![Optimization x Vanilla Plot](assets/Rplot.png?raw=true "Performance Plot")<br>
 
 red: O(qn²) [Our implementation](https://github.com/simsab-ufcg/promethee-vanilla)<br>
-green: O(qnlog(n)) This implementation
-
+green: O(qnlog(n)) This implementation<br>
+q -> Criterion<br>
+n -> Alternatives
 
 ## Accepted format
 
 You should use 2 folders to represent criterions input/ and meta/. <br><br>
-Input folder must be filled with files that represent critetion value for each alternative, this file following this pattern: <br>
-NAME_OF_CRITERION --- the data of every alternative in that specific criterion in matrix format.<br><br>
+Input folder must be filled with files that represent a alternative value for each criterion, this file following this pattern: <br>
+NAME_OF_CRITERION --- the data of every alternative in that specific criterion in matrix format.<br>
+All files must be matrix with same size.<br><br>
 Meta folder must de filled with parameters specification for each preference function that will be used in each criterion, this files must have the same name of the respective criterion in input folder.<br>
 
 ### Function and parameters specification
@@ -27,7 +29,7 @@ function_name
 parameters
 is_max
 ```
-In which weight is the value of weight that criterion,function_name is the name of the functions (currently is only implemented linear comparisson), parameters are the parameters for the specific function and is_max indicates if in the comparison greater values are desired over the smaller ones (0 if smaller values are desired, 1 for greater values).
+In which weight is the value of weight that criterion, function_name is the name of the functions (currently is only implemented linear comparisson), parameters are the parameters for the specific function and is_max indicates if in the comparison greater values are desired over the smaller ones (0 if smaller values are desired, 1 for greater values).
 
 Example:
 ```
@@ -37,15 +39,27 @@ linear
 1
 ```
 
+### Out of Zone of Study
+
+In cases where not all of the alternatives must be counted to calculate the Flow, will should use "nan" (case sensitive) in criterion value to determine that this alternative will not be used.<br>
+This is useful when the input matrix is an image.<br><br>
+Example:
+```
+nan 2.0 nan
+3.5 4.8 6.5
+nan nan 5.7
+```
+The alternative is determined by row and colunm in matrix, so "nan" must be in the same positions to all criterion matrix.
+
 ## Available preference functions
 
-Our implementation only supports linear comparisson, but can be used parameter = 0 and linear comparisson will behave usual comparisson.
+Our implementation only supports linear comparisson, but can be used parameter _p_ = 0 and linear comparisson will behave usual comparisson.
 
 ## How to run
 Execute the following commands in terminal
 ```
 make
-./run path/to/input path/to/meta path/to/output
+./run path/to/input/ path/to/meta/ path/to/output/
 ```
 The result will be put in your path/to/output.
 
