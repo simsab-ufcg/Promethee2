@@ -12,23 +12,12 @@ using namespace std;
 
 int main(int argc, char *argv[]){
 
-  const string INPUT_FILE_SUFFIX = ".input";
-  const string META_FILE_SUFFIX = ".meta";
-
-  const int INPUT_DIRECTORY_INDEX = 1;
-  const int META_DIRECTORY_INDEX = 2;
-  const int OUTPUT_DIRECTORY_INDEX = 3;
-
-  const string PATH_TO_OUTPUT_DIRECTORY(argv[OUTPUT_DIRECTORY_INDEX]);
-
-  // argv in format (name_of_file, weight)
-  Data data = Data();
-  InputReader inputReader = InputReader();
-
-  vector<string> valFiles, metaFiles;
-
-  DIR           *dirp;
-  struct dirent *directory;
+  //lambdas
+  auto validDir = [](string directory){
+    if(directory.size() >= 1 && directory.back() != '/')
+      return directory + '/';
+    return directory;
+  };
 
   auto endsWith = [](string text, string pattern){
     bool result = false;
@@ -53,7 +42,6 @@ int main(int argc, char *argv[]){
   auto filterDirectoryFiles = [readFiles, endsWith](string directoryName, string suffix){
     DIR* dirp = opendir(directoryName.c_str());
     vector<string> files;
-    
     if(dirp){
       
       files = readFiles(dirp);
@@ -76,12 +64,31 @@ int main(int argc, char *argv[]){
     return files;
   };
 
+  //consts
+  const string INPUT_FILE_SUFFIX = ".input";
+  const string META_FILE_SUFFIX = ".meta";
+
+  const int INPUT_DIRECTORY_INDEX = 1;
+  const int META_DIRECTORY_INDEX = 2;
+  const int OUTPUT_DIRECTORY_INDEX = 3;
+
+  const string PATH_TO_OUTPUT_DIRECTORY(validDir(argv[OUTPUT_DIRECTORY_INDEX]));
+
+  // argv in format (name_of_file, weight)
+  Data data = Data();
+  InputReader inputReader = InputReader();
+
+  vector<string> valFiles, metaFiles;
+
+  DIR           *dirp;
+  struct dirent *directory;
+
   /* input directory */ 
-  string inputDirectory(argv[INPUT_DIRECTORY_INDEX]);
+  string inputDirectory(validDir(argv[INPUT_DIRECTORY_INDEX]));
   valFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
 
   /* meta directory */ 
-  string metaDirectory(argv[META_DIRECTORY_INDEX]);
+  string metaDirectory(validDir(argv[META_DIRECTORY_INDEX]));
   metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
 
   /* output directory */

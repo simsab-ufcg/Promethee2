@@ -1,3 +1,4 @@
 run
 .vscode/
 out/
+*.o
