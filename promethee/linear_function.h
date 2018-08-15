@@ -7,8 +7,8 @@
     struct LinearFunction : PrometheeFunction {
         ldouble pParameter;
         
-        LinearFunction(ldouble pParameter): PrometheeFunction(){
-            this->pParameter = pParameter;
+        LinearFunction(vector<ldouble> pParameter): PrometheeFunction(){
+            this->pParameter = pParameter[0];
         }
         
         ldouble getPositiveDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight) override;

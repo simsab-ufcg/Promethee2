@@ -3,6 +3,7 @@
 #include <iostream>
 #include <limits>
 #include <cmath>
+
 Matrix InputReader::readMatrix(string path){
   ifstream in(path);
   Matrix matrix;
@@ -23,23 +24,22 @@ Matrix InputReader::readMatrix(string path){
   }
   return matrix;
 }
-MatrixMetaData InputReader::readMetaData(string path){
+MatrixMetaData InputReader::readMetaData(string path, bool is_opt){
   ifstream in(path);
   MatrixMetaData meta;
   string funType;
-  ldouble pParameter;
-  if(in >> meta.weight){
-    in >> funType;
-    in >> pParameter;
-    in >> meta.isMax;
-  } else {
-    meta.weight = 1.0;
-    funType = "linear";
-    meta.isMax = true;
-    pParameter = 1.0;
-  }
+  string parameters_line;
+  in >> meta.weight;
+  in >> funType;
+  in >> parameters_line;
+  vector<ldouble> parameters;
+  ldouble param;
+  stringstream lineSplitter(parameters_line);
+  while(lineSplitter >> param)
+    parameters.push_back(param);
+  in >> meta.isMax;
   meta.name = path;
   // only linear by now
-  meta.function = new LinearFunction(pParameter);
+  meta.function = new PrometheeFunctionAdapter(is_opt, parameters, funType);
   return meta;
 }

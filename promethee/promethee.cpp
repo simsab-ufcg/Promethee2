@@ -1,6 +1,6 @@
 #include "promethee.h"
 #include "normalize.h"
-#include "promethee_function.h"
+#include "promethee_function_adapter.h"
 #include <iostream>
 PrometheeResult Promethee::process(Data data){
   
@@ -20,7 +20,7 @@ PrometheeResult Promethee::process(Data data){
 
     Matrix matrix = data.getCriteriaMatrix(criteria);
     ldouble weight = data.getCriteriaWeight(criteria);
-    PrometheeFunction* function = data.getFunction(criteria);
+    PrometheeFunctionAdapter* function = data.getFunction(criteria);
     bool isMax = data.getIsMax(criteria);
     vector<ldouble> values;
 

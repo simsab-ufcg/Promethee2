@@ -1,12 +1,13 @@
 #include "types.h"
-#include "types.h"
 #include "data.h"
 #include "normalize.h"
 #include "promethee.h"
 #include "inputreader.h"
 #include "outputwriter.h"
+#include "promethee_vanilla.h"
 #include <iostream>
 #include <dirent.h>
+
 using namespace std;
 
 
@@ -71,8 +72,20 @@ int main(int argc, char *argv[]){
   const int INPUT_DIRECTORY_INDEX = 1;
   const int META_DIRECTORY_INDEX = 2;
   const int OUTPUT_DIRECTORY_INDEX = 3;
+  const int IS_OPT_FLAG_INDEX = 4;
+
+  bool opt_flag = true;
 
   const string PATH_TO_OUTPUT_DIRECTORY(validDir(argv[OUTPUT_DIRECTORY_INDEX]));
+
+  if(argc < 4 || argc > 5){
+    cerr << "TODO Oliveira";
+    exit(0);
+  }else if(argc == 5){
+    cerr << argv[IS_OPT_FLAG_INDEX] << endl;
+    if(string(argv[IS_OPT_FLAG_INDEX]) == "-V")
+      opt_flag = false;
+  }
 
   // argv in format (name_of_file, weight)
   Data data = Data();
@@ -112,7 +125,7 @@ int main(int argc, char *argv[]){
 
     // reading matrix of values in which each cell represent the pixel's value for a certain criteria
     Matrix nmatrix = inputReader.readMatrix(inputFile);
-    MatrixMetaData metaData = inputReader.readMetaData(metaFile);
+    MatrixMetaData metaData = inputReader.readMetaData(metaFile, opt_flag);
 
     // reading the criteria weight
     // ldouble weight = atof(argv[i + 1]);
@@ -122,10 +135,18 @@ int main(int argc, char *argv[]){
 
   data.normalizeWeights();
 
-  Promethee promethee = Promethee();
 
   // applying promethee to the given data and generating its results
-  PrometheeResult result = promethee.process(data);
+  PrometheeResult result;
+
+  if(opt_flag){
+    Promethee promethee = Promethee();
+    result = promethee.process(data);
+  } else {
+    cerr << "executando vanilla" << endl;
+    PrometheeVanilla promethee = PrometheeVanilla();
+    result = promethee.process(data);
+  }
   OutputWriter outputWriter = OutputWriter();
 
   // storing the generated result
