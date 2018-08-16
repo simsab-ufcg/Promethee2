@@ -143,7 +143,6 @@ int main(int argc, char *argv[]){
     Promethee promethee = Promethee();
     result = promethee.process(data);
   } else {
-    cerr << "executando vanilla" << endl;
     PrometheeVanilla promethee = PrometheeVanilla();
     result = promethee.process(data);
   }
