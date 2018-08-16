@@ -25,13 +25,14 @@ PrometheeResult PrometheeVanilla::process(Data data){
 			for(int column = 0; column < ncolumns; column++)
 				for(int line2 = 0; line2 < nlines; line2++)
 					for(int column2 = 0; column2 < ncolumns; column2++)
-						if(validPixels[line][column] && validPixels[line2][column2])
+						if(validPixels[line][column] && validPixels[line2][column2]
+						&& (line != line2 || column != column2))
 							if(isMax){
-								positiveFlow[line][column] += (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
-								negativeFlow[line][column] += (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
+								positiveFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
+								negativeFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
 							} else {
-								negativeFlow[line][column] += (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
-								positiveFlow[line][column] += (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
+								negativeFlow[line2][column2] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
+								positiveFlow[line2][column2] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
 							}
   	}
 
