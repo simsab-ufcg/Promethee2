@@ -38,7 +38,7 @@ level
 0.5 1
 1
 ```
-Functions which use more of than 2 parameters must be follow _p_, _q_ pattern.
+Functions which use more of than 2 parameters must be follow pattern _p_, _q_.
 
 
 ### Out of Zone of Study
@@ -81,7 +81,7 @@ make
 ./run path/to/input/ path/to/meta/ path/to/output/
 ```
 The result will be put in your path/to/output.<br>
-In case, which should be run Vanilla implementation add -V flag.
+In case which should be run Vanilla implementation add -V flag.
 
 ## References
 
