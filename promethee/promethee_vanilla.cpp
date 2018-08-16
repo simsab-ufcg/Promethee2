@@ -26,7 +26,7 @@ PrometheeResult PrometheeVanilla::process(Data data){
 				for(int line2 = 0; line2 < nlines; line2++)
 					for(int column2 = 0; column2 < ncolumns; column2++)
 						if(validPixels[line][column] && validPixels[line2][column2]
-						&& (line != line2 || column != column2))
+						&& (line != line2 || column != column2)){
 							if(isMax){
 								positiveFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
 								negativeFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
@@ -34,6 +34,7 @@ PrometheeResult PrometheeVanilla::process(Data data){
 								negativeFlow[line2][column2] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
 								positiveFlow[line2][column2] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
 							}
+						}
   	}
 
 	// applying a not standard normalization (but used by grass)

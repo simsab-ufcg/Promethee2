@@ -12,6 +12,7 @@
   #include "vanilla/gaussian_function.h"
   #include "promethee_function.h"
   #include "linear_function.h"
+  #include <string>
 
   struct PrometheeFunctionAdapter{
     PrometheeFunction* optFunction;
