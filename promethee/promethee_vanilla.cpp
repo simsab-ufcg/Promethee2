@@ -19,8 +19,6 @@ PrometheeResult PrometheeVanilla::process(Data data){
 		PrometheeFunctionAdapter* function = data.getFunction(criteria);
 		bool isMax = data.getIsMax(criteria);
 		vector<ldouble> values;
-
-
 		for(int line = 0; line < nlines; line++)
 			for(int column = 0; column < ncolumns; column++)
 				for(int line2 = 0; line2 < nlines; line2++)
@@ -31,8 +29,8 @@ PrometheeResult PrometheeVanilla::process(Data data){
 								positiveFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
 								negativeFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
 							} else {
-								negativeFlow[line2][column2] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
-								positiveFlow[line2][column2] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
+								positiveFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line2][column2], matrix[line][column]);
+								negativeFlow[line][column] += weight * (*(*function).getVanilla())(matrix[line][column], matrix[line2][column2]);
 							}
 						}
   	}
