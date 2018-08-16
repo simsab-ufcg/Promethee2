@@ -6,7 +6,7 @@ Implementation of Promethee with optimization O(qnlog(n)) following [this](https
 
 ![Optimization x Vanilla Plot](assets/Rplot.png?raw=true "Performance Plot")<br>
 
-red: O(qn²) [Our implementation](https://github.com/simsab-ufcg/promethee-vanilla)<br>
+red: O(qn²) Vanilla implementation<br>
 green: O(qnlog(n)) This implementation<br>
 q -> Criterion<br>
 n -> Alternatives
@@ -29,15 +29,17 @@ function_name
 parameters
 is_max
 ```
-In which weight is the value of weight that criterion, function_name is the name of the functions (currently is only implemented linear comparisson), parameters are the parameters for the specific function and is_max indicates if in the comparison greater values are desired over the smaller ones (0 if smaller values are desired, 1 for greater values).
+In which weight is the value of weight that criterion, function_name is the name of the functions, parameters are the parameters for the specific function and is_max indicates if in the comparison greater values are desired over the smaller ones (0 if smaller values are desired, 1 for greater values).
 
 Example:
 ```
 0.2
-linear
-1
+level
+0.5 1
 1
 ```
+Functions which use more of than 2 parameters must be follow _p_, _q_ pattern.
+
 
 ### Out of Zone of Study
 
@@ -53,6 +55,23 @@ The alternative is determined by row and colunm in matrix, so "nan" must be in t
 
 ## Available preference functions
 
+#### Vanilla
+
+```
+Usual => usual
+Quasi (U-shape) => quasi
+Linear (V-shape) => linear
+Level => level
+Linear with Indifference => linearWithIndifference
+Gaussian => gaussian
+```
+
+#### Optimization
+
+```
+Linear (V-shape) => linear
+```
+
 Our implementation only supports linear comparisson, but can be used parameter _p_ = 0 and linear comparisson will behave usual comparisson.
 
 ## How to run
@@ -61,7 +80,8 @@ Execute the following commands in terminal
 make
 ./run path/to/input/ path/to/meta/ path/to/output/
 ```
-The result will be put in your path/to/output.
+The result will be put in your path/to/output.<br>
+In case, which should be run Vanilla implementation add -V flag.
 
 ## References
 
