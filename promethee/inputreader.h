@@ -9,7 +9,7 @@
   
   struct InputReader{
     Matrix readMatrix(string path);
-    MatrixMetaData readMetaData(string path);
+    MatrixMetaData readMetaData(string path, bool is_opt);
   };
 
 #endif

@@ -18,7 +18,7 @@ bool Data::getIsMax(int index){
   return metaData[index].isMax;
 }
 
-PrometheeFunction* Data::getFunction(int index){
+PrometheeFunctionAdapter* Data::getFunction(int index){
   return metaData[index].function;
 }
 

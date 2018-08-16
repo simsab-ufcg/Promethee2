@@ -4,7 +4,7 @@
 
   #include "types.h"
   #include "matrix_meta_data.h"
-  #include "promethee_function.h"
+  #include "promethee_function_adapter.h"
   
   struct Data{
   
@@ -17,7 +17,7 @@
   
     ldouble getCriteriaWeight(int index);
   
-    PrometheeFunction* getFunction(int index);
+    PrometheeFunctionAdapter* getFunction(int index);
   
     bool getIsMax(int index);
   
