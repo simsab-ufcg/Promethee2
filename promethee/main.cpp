@@ -79,10 +79,9 @@ int main(int argc, char *argv[]){
   const string PATH_TO_OUTPUT_DIRECTORY(validDir(argv[OUTPUT_DIRECTORY_INDEX]));
 
   if(argc < 4 || argc > 5){
-    cerr << "TODO Oliveira";
+    cerr << "Arguments are invalid!";
     exit(0);
   }else if(argc == 5){
-    cerr << argv[IS_OPT_FLAG_INDEX] << endl;
     if(string(argv[IS_OPT_FLAG_INDEX]) == "-V")
       opt_flag = false;
   }
