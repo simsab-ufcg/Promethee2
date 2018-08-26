@@ -1,15 +1,6 @@
 # PrometheeOptimization
 
-Implementation of Promethee with optimization O(qnlog(n)) following [this](https://www.sciencedirect.com/science/article/pii/S0305048317303729) article.
-
-## Performance Plot O(qnlog(n)) x O(qn²)
-
-![Optimization x Vanilla Plot](assets/Rplot.png?raw=true "Performance Plot")<br>
-
-red: O(qn²) Vanilla implementation<br>
-green: O(qnlog(n)) This implementation<br>
-q -> Criterion<br>
-n -> Alternatives
+An implementation of Promethee 2 based on the "PROMETHEE is not quadratic: An O(qnlog(n)) algorithm" [paper](https://www.sciencedirect.com/science/article/pii/S0305048317303729) by Toon Calders and Dimitri Van Assch.
 
 ## Accepted format
 
@@ -74,10 +65,12 @@ Linear (V-shape) => linear
 
 Our implementation only supports linear comparisson, but can be used parameter _p_ = 0 and linear comparisson will behave usual comparisson.
 
+## How to compile
+Just run ```make``` command in the root directory.
+
 ## How to run
-Execute the following commands in terminal
+To run an promethee execution, execute the followin command
 ```
-make
 ./run path/to/input/ path/to/meta/ path/to/output/
 ```
 The result will be put in your path/to/output.<br>
