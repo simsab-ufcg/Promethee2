@@ -57,8 +57,8 @@ For the optimized version, we support the Linear shape (as the proposed method i
 
 ### Out of Zone of Study
 
-In cases where not all of the alternatives must be counted to calculate the Flow, will should use "nan" (case sensitive) in criterion value to determine that this alternative will not be used.<br>
-This is useful when the input matrix is an image.<br><br>
+In cases where not all of the alternatives must be counted to calculate the Flow, it is possible to ignore them by using "nan" (case sensitive) in the `NAME_OF_CRITERION.input` files.
+
 Example:
 ```
 nan 2.0 nan
