@@ -14,30 +14,25 @@ To run an promethee execution, execute the following command
 ```
 The `path/to/input/` and `path/to/meta/` directories keep the specification of alternatives and criteria to analysed. Please, see the example in the `samples` directory. The input specs are described in the following section. The output of the promethee execution will be storage in the `path/to/output` directory.
 
-To run the classical, non-optimized, promethee implementation, use th `-V` flag
+To run the classical, non-optimized, promethee implementation, use th `-V` (Vanilla) flag
 ```
 ./run -V path/to/input/ path/to/meta/ path/to/output/
 ```
 
 ## Input format
 
-You should use 2 folders to represent criterions input/ and meta/. <br><br>
-Input folder must be filled with files that represent a alternative value for each criterion, this file following this pattern: <br>
-NAME_OF_CRITERION.input --- the data of every alternative in that specific criterion in matrix format.<br>
-All files must be matrix with same size.<br><br>
-Meta folder must be filled with parameters specification for each preference function that will be used in each criterion, this files must have the same name of the respective criterion in input folder but .meta extension instead of .input.<br>
+The input data should be specified in two directories; one describes the evaluation of the alternatives to each considered criterion, the other describes the preference function to compare alternatives. 
 
-### Function and parameters specification
+In the alternatives directory, the user should add a file to each criterion, following the `NAME_OF_CRITERION.input` convention. These files indicate the evaluation of each alternative according to the criterion specified, in a matrix format, separated by an empty speace and new lines separator. 
 
-Each file in meta folder should following this pattern:
-
+The second directory, which specifies the preference functions, should have a file to each criterion, using the `NAME_OF_CRITERION.meta` convention. Each file should follow the pattern:
 ```
 weight
 function_name
 parameters
 is_max
 ```
-In which weight is the value of weight that criterion, function_name is the name of the functions, parameters are the parameters for the specific function and is_max indicates if in the comparison greater values are desired over the smaller ones (0 if smaller values are desired, 1 for greater values).
+In which `weight` is the value of weight of the criterion specified, `function_name` is the name of the function, `parameters` are the parameters, separated by an empty space, for the specific function, and `is_max indicates` if in the comparison greater values are desired over the smaller ones (0 if smaller values are desired, 1 for greater values).
 
 Example:
 ```
@@ -46,21 +41,10 @@ level
 0.5 1
 1
 ```
-Functions which use more of than 2 parameters must be follow pattern _p_, _q_.
 
-### Out of Zone of Study
+### Available preference functions
 
-In cases where not all of the alternatives must be counted to calculate the Flow, will should use "nan" (case sensitive) in criterion value to determine that this alternative will not be used.<br>
-This is useful when the input matrix is an image.<br><br>
-Example:
-```
-nan 2.0 nan
-3.5 4.8 6.5
-nan nan 5.7
-```
-The alternative is determined by row and colunm in matrix, so "nan" must be in the same positions to all criterion matrix.
-
-## Available preference functions
+We support below functions of the vanilla and optimized versions
 
 #### Vanilla
 
@@ -73,13 +57,25 @@ Linear with Indifference => linearWithIndifference
 Gaussian => gaussian
 ```
 
-#### Optimization
+#### Optimized
 
 ```
 Linear (V-shape) => linear
 ```
 
-Our implementation only supports linear comparisson, but can be used parameter _p_ = 0 and linear comparisson will behave usual comparisson.
+Note that, howevew our implementation only supports linear comparisson, one can use the parameter `p = 0` and linear comparisson will behave usual comparisson.
+
+### Out of Zone of Study
+
+In cases where not all of the alternatives must be counted to calculate the Flow, will should use "nan" (case sensitive) in criterion value to determine that this alternative will not be used.<br>
+This is useful when the input matrix is an image.<br><br>
+Example:
+```
+nan 2.0 nan
+3.5 4.8 6.5
+nan nan 5.7
+```
+The alternative is determined by row and colunm in matrix, so "nan" must be in the same positions to all criterion matrix.
 
 ## References
 
