@@ -2,7 +2,24 @@
 
 An implementation of Promethee 2 based on the "PROMETHEE is not quadratic: An O(qnlog(n)) algorithm" [paper](https://www.sciencedirect.com/science/article/pii/S0305048317303729) by Toon Calders and Dimitri Van Assch.
 
-## Accepted format
+# Building/Running
+
+## Build
+To build our project just run ```make``` command in the root directory.
+
+## Run
+To run an promethee execution, execute the following command
+```
+./run path/to/input/ path/to/meta/ path/to/output/
+```
+The `path/to/input/` and `path/to/meta/` directories keep the specification of alternatives and criteria to analysed. Please, see the example in the `samples` directory. The input specs are described in the following section. The output of the promethee execution will be storage in the `path/to/output` directory.
+
+To run the classical, non-optimized, promethee implementation, use th `-V` flag
+```
+./run -V path/to/input/ path/to/meta/ path/to/output/
+```
+
+## Input format
 
 You should use 2 folders to represent criterions input/ and meta/. <br><br>
 Input folder must be filled with files that represent a alternative value for each criterion, this file following this pattern: <br>
@@ -30,7 +47,6 @@ level
 1
 ```
 Functions which use more of than 2 parameters must be follow pattern _p_, _q_.
-
 
 ### Out of Zone of Study
 
@@ -64,17 +80,6 @@ Linear (V-shape) => linear
 ```
 
 Our implementation only supports linear comparisson, but can be used parameter _p_ = 0 and linear comparisson will behave usual comparisson.
-
-## How to compile
-Just run ```make``` command in the root directory.
-
-## How to run
-To run an promethee execution, execute the followin command
-```
-./run path/to/input/ path/to/meta/ path/to/output/
-```
-The result will be put in your path/to/output.<br>
-In case which should be run Vanilla implementation add -V flag.
 
 ## References
 
