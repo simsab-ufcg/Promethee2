@@ -42,11 +42,7 @@ level
 1
 ```
 
-### Available preference functions
-
-We support below functions of the vanilla and optimized versions
-
-#### Vanilla
+We support all the prefence functions described in the literature. See below how each one of them should be declared in the `function_name` parameter:
 
 ```
 Usual => usual
@@ -57,13 +53,7 @@ Linear with Indifference => linearWithIndifference
 Gaussian => gaussian
 ```
 
-#### Optimized
-
-```
-Linear (V-shape) => linear
-```
-
-Note that, howevew our implementation only supports linear comparisson, one can use the parameter `p = 0` and linear comparisson will behave usual comparisson.
+For the optimized version, we support the Linear shape (as the proposed method is restricted to Linear functions). Note that, however our implementation only supports linear comparisson, one can use the parameter `p = 0` and linear comparisson will behave usual comparisson.
 
 ### Out of Zone of Study
 
