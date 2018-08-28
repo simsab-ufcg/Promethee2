@@ -10,6 +10,24 @@
 
 using namespace std;
 
+void validateInput(Data data, int nMatrices) {
+  int nLines = data.matrices[0].size(), nColumns;
+
+  for(int i = 1; i < nMatrices; i++) {
+    if(nLines != data.matrices[i].size()) {
+      cerr << "Invalid input file (quantity of lines does not match)" << endl;
+      exit(0);
+    }
+
+    for(int j = 0; j < nLines; j++) {
+      nColumns = data.matrices[0][j].size();
+      if(nColumns != data.matrices[i][j].size()) {
+        cerr << "Invalid input file (quantity of columns does not match)" << endl;
+        exit(0);
+      }
+    }
+  }
+}
 
 int main(int argc, char *argv[]){
 
@@ -65,7 +83,7 @@ int main(int argc, char *argv[]){
     return files;
   };
 
-  //consts
+  //constants
   const string INPUT_FILE_SUFFIX = ".input";
   const string META_FILE_SUFFIX = ".meta";
 
@@ -109,7 +127,7 @@ int main(int argc, char *argv[]){
   sort(valFiles.begin(), valFiles.end());
   sort(metaFiles.begin(), metaFiles.end());
 
-  if(valFiles != metaFiles) { // files dont match
+  if(valFiles != metaFiles) { // files don't match
     cout << "Error: not every file has its metadata accordingly or vice versa\n";
     return 0;
   }
@@ -132,8 +150,8 @@ int main(int argc, char *argv[]){
     data.addCriteria(nmatrix, metaData);
   }
 
+  validateInput(data, ((int) valFiles.size()));
   data.normalizeWeights();
-
 
   // applying promethee to the given data and generating its results
   PrometheeResult result;
