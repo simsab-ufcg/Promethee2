@@ -24,21 +24,32 @@ Matrix InputReader::readMatrix(string path){
   }
   return matrix;
 }
+
 MatrixMetaData InputReader::readMetaData(string path, bool is_opt){
   ifstream in(path);
   MatrixMetaData meta;
-  string funType;
-  string parameters_line;
-  in >> meta.weight;
-  in >> funType;
-  in >> parameters_line;
-  vector<ldouble> parameters;
-  ldouble param;
-  stringstream lineSplitter(parameters_line);
-  while(lineSplitter >> param)
-    parameters.push_back(param);
-  in >> meta.isMax;
+
+  string token;
+  vector<string> input;
+
+  while(in >> token) {
+    input.push_back(token);
+  }
+
+  meta.weight = stod(input[0]);
+  string funType = input[1];
+  string parameters_line = input[2];
+  meta.isMax = stoi(input[3]);
   meta.name = path;
+
+  ldouble param;
+  vector<ldouble> parameters;
+  stringstream lineSplitter(parameters_line);
+  
+  while(lineSplitter >> param) {
+    parameters.push_back(param);
+  }
+
   // only linear by now
   meta.function = new PrometheeFunctionAdapter(is_opt, parameters, funType);
   return meta;
