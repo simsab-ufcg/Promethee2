@@ -32,7 +32,7 @@ MatrixMetaData InputReader::readMetaData(string path, bool is_opt){
   string token;
   vector<string> input;
 
-  while(in >> token) {
+  while(getline(in, token)) {
     input.push_back(token);
   }
 
