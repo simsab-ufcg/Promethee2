@@ -12,6 +12,7 @@
   #include "vanilla/gaussian_function.h"
   #include "promethee_function.h"
   #include "linear_function.h"
+  #include "linear_with_indifference_function.h"
   #include <string>
 
   struct PrometheeFunctionAdapter{
@@ -34,7 +35,10 @@
       } else if(funType == "gaussian") {
         vanillaFunction = new GaussianComparator(params);
       }
-      optFunction = new LinearFunction(params);
+      if(funType == "linear")
+        optFunction = new LinearFunction(params);
+      else if(funType == "linearWithIndifference")
+        optFunction = new LinearWithIndifferenceFunction(params);
     };
 
     ldouble getPositiveDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight);
