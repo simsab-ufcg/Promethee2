@@ -1,5 +1,6 @@
 CC=g++
 CFLAGS = -std=c++14
+LIBS = -lpthread
 
 DEPS = promethee/*.h
 
@@ -9,13 +10,13 @@ OBJS := $(addsuffix .o,$(basename $(SRCS)))
 all: run
 
 promethee/%.o: promethee/%.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
 promethee/vanilla/%.o: promethee/vanilla/%.cpp $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) $(LIBS)
 
 run: $(OBJS)
-	$(CC) -o $@ $^ 
+	$(CC) -o $@ $^ $(LIBS)
 
 clean: 
 	rm -rf promethee/*.o

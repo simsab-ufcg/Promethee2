@@ -5,6 +5,7 @@
 #include "inputreader.h"
 #include "outputwriter.h"
 #include "promethee_vanilla.h"
+#include "promethee_thread.h"
 #include <iostream>
 #include <dirent.h>
 
@@ -96,12 +97,17 @@ int main(int argc, char *argv[]){
 
   const string PATH_TO_OUTPUT_DIRECTORY(validDir(argv[OUTPUT_DIRECTORY_INDEX]));
 
+  bool threads = false;
   if(argc < 4 || argc > 5){
     cerr << "Arguments are invalid!";
     exit(0);
   }else if(argc == 5){
     if(string(argv[IS_OPT_FLAG_INDEX]) == "-V")
       opt_flag = false;
+    else if(string(argv[IS_OPT_FLAG_INDEX]) == "-T"){
+      threads = true;
+      opt_flag = false;
+    }
   }
 
   // argv in format (name_of_file, weight)
@@ -159,8 +165,11 @@ int main(int argc, char *argv[]){
   if(opt_flag){
     Promethee promethee = Promethee();
     result = promethee.process(data);
-  } else {
+  } else if(!threads){
     PrometheeVanilla promethee = PrometheeVanilla();
+    result = promethee.process(data);
+  } else {
+    PrometheeThread promethee = PrometheeThread();
     result = promethee.process(data);
   }
   OutputWriter outputWriter = OutputWriter();
