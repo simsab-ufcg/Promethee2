@@ -68,6 +68,13 @@ PrometheeResult PrometheeThread::process(Data data){
 
     MaskMatrix validPixels = data.getMaskMatrix();
 
+    int validValues = 0;
+
+    for(int line = 0; line < nlines; line++)
+        for(int column = 0; column < ncolumns; column++)
+            if(validPixels[line][column])
+                validValues += 1;
+
     vector<Matrix> positive = vector<Matrix>(ncriterias, Matrix(nlines, MatrixLine(ncolumns, 0.0)));
     vector<Matrix> negative = vector<Matrix>(ncriterias, Matrix(nlines, MatrixLine(ncolumns, 0.0)));
 
@@ -96,7 +103,6 @@ PrometheeResult PrometheeThread::process(Data data){
         myArgs.isMax = isMax[criteria];
 
         threads[criteria] = thread(worker, myArgs);
-        // threads[criteria].join();
     }
 
     cout << "threads" << endl;
@@ -119,8 +125,8 @@ PrometheeResult PrometheeThread::process(Data data){
 
   for(int line = 0; line < nlines; line++)
     for(int column = 0; column < ncolumns; column++){
-      positiveFlow[line][column] /= ncriterias;
-      negativeFlow[line][column] /= ncriterias;
+      positiveFlow[line][column] /= validValues - 1;
+      negativeFlow[line][column] /= validValues - 1;
     }
 
   // calculating global flow

@@ -11,6 +11,13 @@ PrometheeResult Promethee::process(Data data){
   // getting matrix with information about valid pixels
   MaskMatrix validPixels = data.getMaskMatrix();
 
+  int validValues = 0;
+
+  for(int line = 0; line < nlines; line++)
+      for(int column = 0; column < ncolumns; column++)
+          if(validPixels[line][column])
+              validValues += 1;
+
   Matrix positiveFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
   Matrix negativeFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
   Matrix netFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
@@ -62,8 +69,8 @@ PrometheeResult Promethee::process(Data data){
   // applying a not standard normalization (but used by grass)
   for(int line = 0; line < nlines; line++)
     for(int column = 0; column < ncolumns; column++){
-      positiveFlow[line][column] /= ncriterias;
-      negativeFlow[line][column] /= ncriterias;
+      positiveFlow[line][column] /= validValues - 1;
+      negativeFlow[line][column] /= validValues - 1;
     }
 
   // calculating global flow
