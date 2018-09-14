@@ -145,15 +145,20 @@ LinearFunction linear({0});
 
 ldouble weight;
 TIFF* openFile(string filename){
-    TIFF* file = TIFFOpen(filename.c_str(), "wm");
-    TIFFSetField(file, TIFFTAG_IMAGEWIDTH, width);
-    TIFFSetField(file, TIFFTAG_IMAGELENGTH, height);
-    TIFFSetField(file, TIFFTAG_SAMPLESPERPIXEL, samplePerPixel);
-    // TIFFSetField(file, TIFFTAG_STRIPOFFSETS, stripOffsets);
-    TIFFSetField(file, TIFFTAG_BITSPERSAMPLE, 8);
-    TIFFSetField(file, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
-    TIFFSetField(file, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-    TIFFSetField(file, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+    TIFF* file = TIFFOpen(filename.c_str(), "w8m");
+    TIFFSetField(file, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(file, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(file, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(file, TIFFTAG_SAMPLEFORMAT  , 3);
+    TIFFSetField(file, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(file, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(file, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(file, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(file, TIFFTAG_ROWSPERSTRIP   , 8);
+    TIFFSetField(file, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(file, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(file, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(file, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
     return file;
 }
 
