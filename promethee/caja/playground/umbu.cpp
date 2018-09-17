@@ -1,6 +1,8 @@
 #include "tiffio.h"
 #include <bits/stdc++.h>
 #include <time.h>
+#include <unistd.h>
+#include <sys/types.h>
 using namespace std;
 
 using ldouble = double;
@@ -130,7 +132,7 @@ struct LinearFunction{
 void logger(string description){
     timespec res;
     clock_gettime(CLOCK_MONOTONIC_RAW, &res);
-    printf("%s %lld\n", description.c_str(), res.tv_sec*1000000000ll + res.tv_nsec);
+    printf("%s(%d) %lld\n", description.c_str(), getpid(),  res.tv_sec*1000000000ll + res.tv_nsec);
 }
 
 const int bound = 30000000;
@@ -276,16 +278,19 @@ int main(int argc, char *argv[]){
 
     ldouble *line = new ldouble[width];
 
+    logger("StartChunksProcessing[start]");
     map<double, int> cnt;
     for(int i = 0; i < height; i++){
 
         logger("ProcessLine[start]");
+        // logger("ProcessLine_" + to_string(i) + "_" + to_string(height) + "_[start]");
         TIFFReadScanline(input, line, i);
         for(int j = 0; j < width; j++)
             if(line[j] < 0 || isnan(line[j]));
             else
                 cnt[line[j]]++;
         logger("ProcessLine[end]");
+        // logger("ProcessLine_" + to_string(i) + "_" + to_string(height) + "_[end]");
         if(cnt.size() > bound){
             logger("PreProcessChunk[start]");
             vector<ldouble> values;
@@ -309,6 +314,8 @@ int main(int argc, char *argv[]){
             logger("GeneratingOutputChunk[end]");
         }
     }
+    logger("StartChunksProcessing[end]");
+    logger("IncompleteChunkProcessing[start]");
     if(cnt.size() > 0){
         logger("PreProcessChunk[start]");
         vector<ldouble> values;
@@ -331,6 +338,7 @@ int main(int argc, char *argv[]){
         generateChunkOutTifUnbu(input, values, sumAcc, countAcc);
         logger("GeneratingOutputChunk[end]");
     }
+    logger("IncompleteChunkProcessing[end]");
 
     TIFFClose(input);
     logger("Umbu[end]");
