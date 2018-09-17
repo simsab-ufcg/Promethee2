@@ -1,5 +1,6 @@
 #include "tiffio.h"
 #include <bits/stdc++.h>
+#include <time.h>
 using namespace std;
 
 using ldouble = double;
@@ -126,8 +127,14 @@ struct LinearFunction{
     }
 };
 
+void logger(string description){
+    timespec res;
+    clock_gettime(CLOCK_MONOTONIC_RAW, &res);
+    printf("%s %lld\n", description.c_str(), res.tv_sec*1000000000ll + res.tv_nsec);
+}
+
 const int bound = 30000000;
-const int chunks = 16;
+const int chunks = 12;
 
 vector<ldouble> makeSumAccum(vector<ldouble> &values){
     vector<ldouble> result;
@@ -192,8 +199,6 @@ void generateChunkOutTif(TIFF *input, vector<ldouble> &values, vector<ldouble> &
                 outline[j] += linear.getPositiveDelta(values, line[j], sumAccum, weight) - linear.getNegativeDelta(values, line[j], sumAccum, weight);
         }
         TIFFWriteScanline(nxt, outline, i);
-        if((i&127) == 0)
-            cerr << i << endl;
     }
     TIFFClose(nxt);
     TIFFClose(out);
@@ -201,33 +206,49 @@ void generateChunkOutTif(TIFF *input, vector<ldouble> &values, vector<ldouble> &
 }
 
 void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldouble> & sumAccum, vector<unsigned int> &cntAccum){
+
+    logger("Generate-OpeningOutputFiles[start]");
     TIFF *out = TIFFOpen(outputFile.c_str(), "rm");
     TIFF *nxt = openFile(nextFile);
+    logger("Generate-OpeningOutputFiles[end]");
 
     ldouble *line = new ldouble[width];
     ldouble *outline = new ldouble[width];
     for (int i = 0; i < height; i++){
+
+        logger("Generate-OpeningInputFiles[start]");
         TIFFReadScanline(input, line, i);
         TIFFReadScanline(out, outline, i);
+        logger("Generate-OpeningInputFiles[end]");
+
+        logger("Generate-flowCalc[start]");
         for (int j = 0; j < width; j++) {
             if(line[j] < 0 || isnan(line[j]))
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             else
                 outline[j] += linear.getPositiveDelta(values, line[j], sumAccum, weight, cntAccum) - linear.getNegativeDelta(values, line[j], sumAccum, weight, cntAccum);
         }
+        logger("Generate-flowCalc[end]");
+
+        logger("Generate-WritingLineResult");
         TIFFWriteScanline(nxt, outline, i);
-        if((i&127) == 0)
-            cerr << i << endl;
+        logger("Generate-WritingLineResult");
     }
+
+    logger("Generate-ClosingTiffs");
     TIFFClose(nxt);
     TIFFClose(out);
+    logger("Generate-ClosingTiffs");
     swap(outputFile, nextFile);
 }
+
 
 /** 
  * ./run filename weight pparameter
 **/
 int main(int argc, char *argv[]){
+
+    logger("Umbu[start]");
 
     string criteriaName = argv[1];
     outputFile = "out." + criteriaName;
@@ -237,53 +258,36 @@ int main(int argc, char *argv[]){
 
     linear = LinearFunction({pparameter});
 
+    logger("OpeningInput[start]");
+
     TIFF *input = TIFFOpen(criteriaName.c_str(), "rm");
     TIFFGetField(input, TIFFTAG_IMAGELENGTH, &height);
     TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(input, TIFFTAG_SAMPLESPERPIXEL, &samplePerPixel);
     // TIFFGetField(input, TIFFTAG_STRIPOFFSETS, &stripOffsets);
 
+    logger("OpeningInput[end]");
+
+    logger("CreatingOutputFile[start]");
+
     setupOutput(outputFile);
+
+    logger("CreatingOutputFile[end]");
 
     ldouble *line = new ldouble[width];
 
-    // int chunkStart[chunks + 1];
-    // for (int i = 0; i < chunks; i++)
-    //     chunkStart[i] = (height / chunks) * i;
-    // chunkStart[chunks] = height;
-
-    cerr << "Image size: " << height << " " << width << endl;
-
-    // for (int chunk = 0; chunk < chunks; chunk++){
-    //     int start = chunkStart[chunk], end = chunkStart[chunk + 1] - 1;
-    //     cerr << start << " " << end << endl;
-    //     cerr << "reading" << endl;
-    //     vector<ldouble> values;
-    //     for (int i = start; i <= end; i++){
-    //         TIFFReadScanline(input, line, i);
-    //         for (int j = 0; j < width; j++){
-    //             if(line[j] < 0 || isnan(line[j]));
-    //             else
-    //                 values.push_back(line[j]);
-    //         }
-    //         if((i&127) == 0) cerr << i << endl;
-    //     }
-    //     sort(values.begin(), values.end());
-    //     vector<ldouble> sumAccum = makeSumAccum(values);
-    //     cerr << "writing" << endl;
-    //     generateChunkOutTif(input, values, sumAccum);
-    // }
-
     map<double, int> cnt;
     for(int i = 0; i < height; i++){
+
+        logger("ProcessLine[start]");
         TIFFReadScanline(input, line, i);
         for(int j = 0; j < width; j++)
             if(line[j] < 0 || isnan(line[j]));
             else
                 cnt[line[j]]++;
-        if((i&127) == 0) cerr << "rd " << i << endl;
+        logger("ProcessLine[end]");
         if(cnt.size() > bound){
-            cerr << "unbu-caja" << endl;
+            logger("PreProcessChunk[start]");
             vector<ldouble> values;
             for(auto it : cnt) values.push_back(it.first);
             vector<ldouble> sumAcc;
@@ -299,11 +303,14 @@ int main(int argc, char *argv[]){
                 countAcc.push_back(scnt);
             }
             cnt.clear();
+            logger("PreProcessChunk[end]");
+            logger("GeneratingOutputChunk[start]");
             generateChunkOutTifUnbu(input, values, sumAcc, countAcc);
+            logger("GeneratingOutputChunk[end]");
         }
     }
     if(cnt.size() > 0){
-        cerr << "unbu-caja" << endl;
+        logger("PreProcessChunk[start]");
         vector<ldouble> values;
         for(auto it : cnt) values.push_back(it.first);
         vector<ldouble> sumAcc;
@@ -319,76 +326,13 @@ int main(int argc, char *argv[]){
             countAcc.push_back(scnt);
         }
         cnt.clear();
+        logger("PreProcessChunk[end]");
+        logger("GeneratingOutputChunk[start]");
         generateChunkOutTifUnbu(input, values, sumAcc, countAcc);
+        logger("GeneratingOutputChunk[end]");
     }
 
     TIFFClose(input);
-    
-    // map<double, int> cnt;
-    // //free(data);
-
-    // vector<ldouble> values;
-
-    // for(auto & it : cnt) values.push_back(it.first);
-
-    // int nvalues = cnt.size();
-    // vector<ldouble> cummulative(nvalues, 0);
-    // vector<int> counter(nvalues, 0);
-
-    // ldouble curSum = 0;
-
-    // int ptr = 0;
-    // int sdk = 0;
-    // for(auto & it : cnt){
-    //     curSum += it.first * it.second;
-    //     cummulative[ptr] = curSum;
-    //     sdk += it.second;
-    //     counter[ptr++] = sdk;
-    // }
-
-    // LinearFunction linear = LinearFunction({1});
-
-    // double wei = 0;
-
-    // string lnd = string(argv[1]);
-
-    // if(lnd[1] == 'V') wei = 0.53;
-    // else wei = 0.47;
-
-    // cerr << lnd << " " << wei << endl;
-
-    // TIFF *tif2 = TIFFOpen(("u" + string(argv[1])).c_str(), "wm");
-    // TIFFSetField (tif2, TIFFTAG_IMAGEWIDTH, width);  // set the width of the image
-    // TIFFSetField(tif2, TIFFTAG_IMAGELENGTH, height);    // set the height of the image
-    // TIFFSetField(tif2, TIFFTAG_SAMPLESPERPIXEL, sampleperpixel);   // set number of channels per pixel
-    // TIFFSetField(tif2, TIFFTAG_BITSPERSAMPLE, 8);    // set the size of the channels
-    // TIFFSetField(tif2, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);    // set the origin of the image.
-    // //   Some other essential fields to set that you do not have to understand for now.
-    // TIFFSetField(tif2, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-    // TIFFSetField(tif2, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
-
-    // // for(int row = 0; row < height; row++){
-    // //     for(int i = 0; i < width; i++){
-    // //         data[i] = 0;
-    // //     }
-    // //     TIFFWriteScanline(tif, data, row);
-    // // }
-
-    // cout << setprecision(8) << fixed;
-    // for(int row = 0; row < height; row++){
-    //     TIFFReadScanline(tif, data, row);
-    //     for(int i = 0; i < width; i++){
-    //         if(!(data[i] < 0)){
-    //             out[i] = linear.getPositiveDelta(values, data[i], counter, cummulative, wei);
-    //         } else {
-    //             out[i] = -sqrt(-1.0);
-    //         }
-    //     }
-    //     TIFFWriteScanline(tif2, out, row);
-    // }
-
-    // free(data);
-    // TIFFClose(tif);
-    // TIFFClose(tif2);
+    logger("Umbu[end]");
     return 0;
 }
