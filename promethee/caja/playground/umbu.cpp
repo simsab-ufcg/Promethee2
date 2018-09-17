@@ -278,7 +278,7 @@ int main(int argc, char *argv[]){
 
     ldouble *line = new ldouble[width];
 
-    logger("StartChunksProcessing[start]");
+    logger("LoopChunksProcessing[start]");
     map<double, int> cnt;
     for(int i = 0; i < height; i++){
 
@@ -314,7 +314,7 @@ int main(int argc, char *argv[]){
             logger("GeneratingOutputChunk[end]");
         }
     }
-    logger("StartChunksProcessing[end]");
+    logger("LoopChunksProcessing[end]");
     logger("IncompleteChunkProcessing[start]");
     if(cnt.size() > 0){
         logger("PreProcessChunk[start]");
