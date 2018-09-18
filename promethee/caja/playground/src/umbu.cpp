@@ -131,8 +131,8 @@ struct LinearFunction{
 
 void logger(string description){
     timespec res;
-    clock_gettime(CLOCK_MONOTONIC_RAW, &res);
-    printf("%lld %s(%d)\n", res.tv_sec*1000000000ll + res.tv_nsec, description.c_str(), getpid());
+    clock_gettime(CLOCK_REALTIME, &res);
+    printf("%lld %s(%d)\n", (long long)res.tv_sec, description.c_str(), getpid());
 }
 
 const int bound = 30000000;

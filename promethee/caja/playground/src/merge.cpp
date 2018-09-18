@@ -21,14 +21,19 @@ int main(int argc, char* argv[]){
     TIFFGetField(tifs[0], TIFFTAG_SAMPLESPERPIXEL, &sampleperpixel);
 
     TIFF *out = TIFFOpen("merged.tif", "wm");
-    TIFFSetField(out, TIFFTAG_IMAGEWIDTH, width);  // set the width of the image
-    TIFFSetField(out, TIFFTAG_IMAGELENGTH, height);    // set the height of the image
-    TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, sampleperpixel);   // set number of channels per pixel
-    TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, 8);    // set the size of the channels
-    TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);    // set the origin of the image.
-    //   Some other essential fields to set that you do not have to understand for now.
-    TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-    TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+    TIFFSetField(out, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(out, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(out, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(out, TIFFTAG_SAMPLEFORMAT  , 3);
+    TIFFSetField(out, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(out, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(out, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(out, TIFFTAG_ROWSPERSTRIP   , 8);
+    TIFFSetField(out, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(out, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(out, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(out, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
     double* data = new double[width];
     double* tmp = new double[width];
