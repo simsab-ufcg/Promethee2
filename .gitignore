@@ -2,3 +2,5 @@ run
 .vscode/
 out/
 *.o
+*.tif
+*.out
