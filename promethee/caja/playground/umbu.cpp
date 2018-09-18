@@ -1,8 +1,8 @@
 #include "tiffio.h"
 #include <bits/stdc++.h>
 #include <time.h>
-#include <unistd.h>
 #include <sys/types.h>
+#include <unistd.h>
 using namespace std;
 
 using ldouble = double;
@@ -132,7 +132,7 @@ struct LinearFunction{
 void logger(string description){
     timespec res;
     clock_gettime(CLOCK_MONOTONIC_RAW, &res);
-    printf("%s(%d) %lld\n", description.c_str(), getpid(),  res.tv_sec*1000000000ll + res.tv_nsec);
+    printf("%lld %s(%d)\n", res.tv_sec*1000000000ll + res.tv_nsec, description.c_str(), getpid());
 }
 
 const int bound = 30000000;
@@ -232,15 +232,15 @@ void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldoub
         }
         logger("Generate-flowCalc[end]");
 
-        logger("Generate-WritingLineResult");
+        logger("Generate-WritingLineResult[start]");
         TIFFWriteScanline(nxt, outline, i);
-        logger("Generate-WritingLineResult");
+        logger("Generate-WritingLineResult[end]");
     }
 
-    logger("Generate-ClosingTiffs");
+    logger("Generate-ClosingTiffs[start]");
     TIFFClose(nxt);
     TIFFClose(out);
-    logger("Generate-ClosingTiffs");
+    logger("Generate-ClosingTiffs[end]");
     swap(outputFile, nextFile);
 }
 
