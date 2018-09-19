@@ -2,13 +2,11 @@
 ldouble LinearFunction::getPositiveDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight) {
     ldouble sum = 0;
     {
-        int ptr = lower_bound(values.begin(), values.end(), queryValue - pParameter) - values.begin();
-        ldouble value = weight * ptr;
-        sum += value;
-    }
-    {
-        int ptr = lower_bound(values.begin(), values.end(), queryValue) - values.begin();
         int ptr2 = lower_bound(values.begin(), values.end(), queryValue - pParameter) - values.begin();
+        ldouble value = weight * ptr2;
+        sum += value;
+
+        int ptr = lower_bound(values.begin(), values.end(), queryValue) - values.begin();
         int amount = ptr - ptr2;
         if(amount > 0){
             ldouble value = 0;
@@ -23,15 +21,13 @@ ldouble LinearFunction::getPositiveDelta(vector<ldouble> & values, ldouble query
 ldouble LinearFunction::getNegativeDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight) {
     ldouble sum = 0;
     {
-        int ptr = upper_bound(values.begin(), values.end(), queryValue + pParameter) - values.begin();
-        if(ptr < values.size()){
-            ldouble value = weight * (values.size() - ptr);
+        int ptr2 = upper_bound(values.begin(), values.end(), queryValue + pParameter) - values.begin();
+        if(ptr2 < values.size()){
+            ldouble value = weight * (values.size() - ptr2);
             sum += value;
         }
-    }
-    {
+        
         int ptr = upper_bound(values.begin(), values.end(), queryValue) - values.begin();
-        int ptr2 = upper_bound(values.begin(), values.end(), queryValue + pParameter) - values.begin();
         int amount = ptr2 - ptr;
         if(amount > 0){
             ldouble value = 0;
