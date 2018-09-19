@@ -1,11 +1,20 @@
 #include "tiffio.h"
 #include <bits/stdc++.h>
+#include <time.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 using namespace std;
 
+void logger(string description){
+    timespec res;
+    clock_gettime(CLOCK_REALTIME, &res);
+    cout << res.tv_sec << " " << description.c_str() << " " << getpid() << endl;
+}
+
 /// ./run filename1 filename2 filename3 filename4
 int main(int argc, char* argv[]){
-
+    logger("startmerge");
     TIFF* tifs[argc - 1];
     for(int i = 1; i < argc; i++){
         cerr << "open " << string(argv[i]) << endl;
@@ -34,7 +43,6 @@ int main(int argc, char* argv[]){
     TIFFSetField(out, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(out, TIFFTAG_YRESOLUTION    , 1);
     TIFFSetField(out, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
-
     double* data = new double[width];
     double* tmp = new double[width];
     for(int i = 0; i < height; i++){
@@ -49,7 +57,7 @@ int main(int argc, char* argv[]){
         //     data[j] /= ntiffs;
         TIFFWriteScanline(out, data, i);
     }
-
+    logger("Endmerge");
     TIFFClose(out);
 
     for(int i = 0; i < ntiffs; i++)
