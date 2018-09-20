@@ -1,4 +1,4 @@
-#include "promethee.h"
+#include "promethee_opt.h"
 #include "normalize.h"
 #include "promethee_function_adapter.h"
 #include <iostream>

@@ -1,7 +1,7 @@
 #include "types.h"
 #include "data.h"
 #include "normalize.h"
-#include "promethee.h"
+#include "promethee_opt.h"
 #include "inputreader.h"
 #include "outputwriter.h"
 #include "promethee_vanilla.h"
