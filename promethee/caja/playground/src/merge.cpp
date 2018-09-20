@@ -14,7 +14,7 @@ void logger(string description){
 
 /// ./run filename1 filename2 filename3 filename4
 int main(int argc, char* argv[]){
-    logger("startmerge");
+    logger("merge start");
     TIFF* tifs[argc - 1];
     for(int i = 1; i < argc; i++){
         cerr << "open " << string(argv[i]) << endl;
@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
         //     data[j] /= ntiffs;
         TIFFWriteScanline(out, data, i);
     }
-    logger("Endmerge");
+    logger("merge end");
     TIFFClose(out);
 
     for(int i = 0; i < ntiffs; i++)

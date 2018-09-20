@@ -23,14 +23,18 @@ proctimes = subset(proctimes, stri_length(V2) > 0)
 cpu_min_TS = min(cpu_usage$TIMESTAMP)
 mem_min_TS = min(mem_usage$TIMESTAMP)
 disk_min_TS = min(disk_usage$TIMESTAMP)
+proctimes_min_TS = min(proctimes$V1)
+
+start_program_TS = min( c(cpu_min_TS, mem_min_TS, disk_min_TS, proctimes_min_TS) )
 
 cpu_usage$IDLE = 100 - cpu_usage$IDLE
 
 mem_usage$TOTAL = (mem_usage$USED/mem_usage$TOTAL)*100
 
-cpu_usage$TIMESTAMP = cpu_usage$TIMESTAMP - cpu_min_TS
-mem_usage$TIMESTAMP = mem_usage$TIMESTAMP - mem_min_TS
-disk_usage$TIMESTAMP = disk_usage$TIMESTAMP - disk_min_TS
+cpu_usage$TIMESTAMP = cpu_usage$TIMESTAMP - start_program_TS
+mem_usage$TIMESTAMP = mem_usage$TIMESTAMP - start_program_TS
+disk_usage$TIMESTAMP = disk_usage$TIMESTAMP - start_program_TS
+proctimes$V1 = proctimes$V1 - start_program_TS
 
 cpu_usage = cpu_usage[c("TIMESTAMP", "IDLE", "GNICE")]
 mem_usage = mem_usage[c("TIMESTAMP", "TOTAL", "BUFFER.CACHE")]
@@ -58,18 +62,19 @@ data_disk$TYPE = factor(data_disk$TYPE, levels = unique(data_disk$TYPE))
 data_disk$MB.S = data_disk$MB.S/1024
 
 med_proctimes = 0
-previous = -300
+previous = 0
+
 for(i in 1:dim(proctimes)[1])
 {
-	med_proctimes[i] = (previous + proctimes$V1[i])/2.00
+	med_proctimes[i] = (previous + proctimes$V1[i])/2.0
 	previous = proctimes$V1[i]
 }
 
 
 pplot = ggplot(cpu_usage, aes(x=TIMESTAMP, y=USAGE, group=TYPE, colour=TYPE)) +
-	geom_line(size=0.3) + xlab("TIME (s)") + 
+	geom_line(size=0.7) + xlab("TIME (s)") + 
 	ylab("USAGE (%)") + 
-	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.15) +
+	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.4) +
 	annotate("text", x = med_proctimes, y=0.0, label = proctimes$V2) + 
 	scale_colour_manual(values=c("#FF7777")) + 
 	theme_bw() + 
@@ -80,9 +85,9 @@ ggsave("usage_cpu.png", pplot, width=14)
 
 
 pplot = ggplot(mem_usage, aes(x=TIMESTAMP, y=USAGE, group=TYPE, colour=TYPE)) + 
-	geom_line(size=0.3) + xlab("TIME (s)") + 
+	geom_line(size=0.7) + xlab("TIME (s)") + 
 	ylab("USAGE (%)") + 
-	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.15) + 
+	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.4) + 
 	annotate("text", x = med_proctimes, y=0.0, label = proctimes$V2) + 
 	scale_colour_manual(values=c("#0066CC")) + 
 	theme_bw() + 
@@ -93,10 +98,10 @@ ggsave("usage_mem.png", pplot, width=14)
 
 
 pplot = ggplot(data_cpu_mem, aes(x=TIMESTAMP, y=USAGE, color=TYPE)) + 
-	geom_line(size=0.3) + 
+	geom_line(size=0.7) + 
 	xlab("TIME (s)") + 
 	ylab("USAGE (%)") + 
-	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.15) + 
+	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.4) + 
 	annotate("text", x = med_proctimes, y=0.0, label = proctimes$V2) + 
 	scale_colour_manual(values=c("#FF7777", "#0066CC")) + 
 	theme_bw() + 
@@ -107,10 +112,10 @@ ggsave("usage_cpu_mem.png", pplot, width=14)
 
 
 pplot = ggplot(data_disk, aes(x=TIMESTAMP, y=MB.S, color=TYPE)) + 
-	geom_line(size=0.3) + 
+	geom_line(size=0.7) + 
 	xlab("TIME (s)") + 
 	ylab("MB/S") + 
-	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.15) + 
+	geom_vline(xintercept = proctimes$V1, linetype=2, size=0.4) + 
 	annotate("text", x = med_proctimes, y=-10.0, label = proctimes$V2) + 
 	scale_colour_manual(values=c("#FF7777", "#0066CC")) + 
 	theme_bw() + 
