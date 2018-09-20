@@ -2,8 +2,24 @@
 #include "normalize.h"
 #include "promethee_function_adapter.h"
 #include <iostream>
+#include "inputreader.h"
+#include "outputwriter.h"
 
-PrometheeResult PrometheeOpt::process(Data data){
+Data PrometheeOpt::readData(){
+  InputReader inputReader = InputReader();
+  Data data = Data();
+  for(int i = 0; i < this->inputFiles.size(); i++){
+    Matrix nmatrix = inputReader.readMatrix(this->inputFiles[i]);
+    MatrixMetaData metaData = inputReader.readMetaData(this->metaFiles[i], false);
+    data.addCriteria(nmatrix, metaData);
+  }
+  data.normalizeWeights();
+  return data;
+}
+
+void PrometheeOpt::process() {
+
+  Data data = this->readData();
   int ncriterias = data.matrices.size();
   int nlines = data.matrices[0].size();
   int ncolumns = data.matrices[0][0].size();
@@ -82,5 +98,7 @@ PrometheeResult PrometheeOpt::process(Data data){
 
   // normalizing results
   result.normalizedFlow = Normalizer().normalize(netFlow, validPixels);
-  return result;  
+  
+  OutputWriter outputWriter = OutputWriter();
+  outputWriter.write(this->pathToOutput, result);
 }

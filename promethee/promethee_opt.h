@@ -4,10 +4,12 @@
   
   #include "types.h"
   #include "data.h"
+  #include "promethee.h"
   #include <algorithm>
   
-  struct PrometheeOpt {
-    PrometheeResult  process(Data data);
+  struct PrometheeOpt : Promethee {
+    Data readData();
+    void process();
   };
 
 #endif

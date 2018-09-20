@@ -1,6 +1,23 @@
 #include "promethee_vanilla.h"
+#include "inputreader.h"
+#include "outputwriter.h"
 
-PrometheeResult PrometheeVanilla::process(Data data){
+Data PrometheeVanilla::readData(){
+  InputReader inputReader = InputReader();
+  Data data = Data();
+  for(int i = 0; i < this->inputFiles.size(); i++){
+    Matrix nmatrix = inputReader.readMatrix(this->inputFiles[i]);
+    MatrixMetaData metaData = inputReader.readMetaData(this->metaFiles[i], true);
+    data.addCriteria(nmatrix, metaData);
+  }
+  data.normalizeWeights();
+  return data;
+}
+
+
+void PrometheeVanilla::process(){
+
+	Data data = this->readData();
 
 	int ncriterias = data.matrices.size();
 	int nlines = data.matrices[0].size();
@@ -17,7 +34,7 @@ PrometheeResult PrometheeVanilla::process(Data data){
 		Matrix matrix = data.getCriteriaMatrix(criteria);
 		ldouble weight = data.getCriteriaWeight(criteria);
 		PrometheeFunctionAdapter* function = data.getFunction(criteria);
-		ComparisonFunction comparison = (*(*function).getVanilla());
+		ComparisonFunction* comparison = (*function).getVanilla();
 		bool isMax = data.getIsMax(criteria);
 		vector<ldouble> values;
 		for(int line = 0; line < nlines; line++){
@@ -30,11 +47,11 @@ PrometheeResult PrometheeVanilla::process(Data data){
 						(line != line2 || column != column2)){
 
 							if(isMax){
-								positiveFlow[line][column] += weight * comparison(matrix[line][column], matrix[line2][column2]);
-								negativeFlow[line][column] += weight * comparison(matrix[line2][column2], matrix[line][column]);
+								positiveFlow[line][column] += weight * (*comparison)(matrix[line][column], matrix[line2][column2]);
+								negativeFlow[line][column] += weight * (*comparison)(matrix[line2][column2], matrix[line][column]);
 							} else {
-								positiveFlow[line][column] += weight * comparison(matrix[line2][column2], matrix[line][column]);
-								negativeFlow[line][column] += weight * comparison(matrix[line][column], matrix[line2][column2]);
+								positiveFlow[line][column] += weight * (*comparison)(matrix[line2][column2], matrix[line][column]);
+								negativeFlow[line][column] += weight * (*comparison)(matrix[line][column], matrix[line2][column2]);
 							}
 						}
 					}
@@ -65,6 +82,8 @@ PrometheeResult PrometheeVanilla::process(Data data){
 
 	// normalizing results
 	result.normalizedFlow = Normalizer().normalize(netFlow, validPixels);
-	return result;  
+	
+	OutputWriter outputWriter = OutputWriter();
+  	outputWriter.write(this->pathToOutput, result);
 
 };

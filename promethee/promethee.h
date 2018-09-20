@@ -5,9 +5,13 @@
 using namespace std;
 
 struct Promethee{
-    Promethee(vector<string> inputPaths, vector<string> metaPaths){
-        
-    }
 
-    void process();
+    string pathToOutput;
+    vector<string> inputFiles, metaFiles;
+
+    Promethee();
+
+    virtual void init(vector<string> inputFiles, vector<string> metaFiles, string pathToOutput) ;
+
+    virtual void process();
 };
