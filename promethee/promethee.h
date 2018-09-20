@@ -6,7 +6,7 @@
   #include "data.h"
   #include <algorithm>
   
-  struct Promethee {
+  struct PrometheeOpt {
     PrometheeResult  process(Data data);
   };
 

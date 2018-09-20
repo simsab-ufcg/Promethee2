@@ -3,7 +3,7 @@
 #include "promethee_function_adapter.h"
 #include <iostream>
 
-PrometheeResult Promethee::process(Data data){
+PrometheeResult PrometheeOpt::process(Data data){
   int ncriterias = data.matrices.size();
   int nlines = data.matrices[0].size();
   int ncolumns = data.matrices[0][0].size();

@@ -157,7 +157,7 @@ int main(int argc, char *argv[]){
   PrometheeResult result;
 
   if(opt_flag){
-    Promethee promethee = Promethee();
+    PrometheeOpt promethee = PrometheeOpt();
     result = promethee.process(data);
   } else {
     PrometheeVanilla promethee = PrometheeVanilla();
