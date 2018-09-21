@@ -1,9 +1,9 @@
 #include "promethee_opt.h"
-#include "normalize.h"
-#include "promethee_function_adapter.h"
+#include "../normalize.h"
+#include "../promethee_function_adapter.h"
 #include <iostream>
-#include "inputreader.h"
-#include "outputwriter.h"
+#include "../inputreader.h"
+#include "../outputwriter.h"
 
 Data PrometheeOpt::readData(){
   InputReader inputReader = InputReader();

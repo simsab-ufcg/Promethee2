@@ -11,8 +11,8 @@
   #include "functions/vanilla/linear_indifference_function.h"
   #include "functions/vanilla/gaussian_function.h"
   #include "promethee_function.h"
-  #include "linear_function.h"
-  #include "linear_with_indifference_function.h"
+  #include "functions/optimized/linear_function.h"
+  #include "functions/optimized/linear_with_indifference_function.h"
   #include <string>
 
   struct PrometheeFunctionAdapter{
