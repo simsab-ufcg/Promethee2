@@ -4,8 +4,8 @@
 #g++ -std=c++14 merge.cpp -o merge -ltiff
 #g++ -std=c++14 umbu.cpp -o umbu -ltiff
 
-# Run criterias multithread
-cat criteria | xargs -n 3 -P 8 ./umbu >>../monitoramento/procs
+# Run criteria in parallel
+cat criteria | xargs -n 3 -P 8 ./umbu >>../monitor/procs
 # criteria should follow this pattern
 # name_tif.tif weight p_parameter
 
@@ -16,4 +16,4 @@ for f in out.*.tif; do
 done
 
 # Sum all flow results
-./merge$input >> ../monitoramento/procs
+./merge$input >> ../monitor/procs
