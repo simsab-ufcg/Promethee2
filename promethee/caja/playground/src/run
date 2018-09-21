@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Compiling programs, change to makefile after.
+#g++ -std=c++14 merge.cpp -o merge -ltiff
+#g++ -std=c++14 umbu.cpp -o umbu -ltiff
+
+# Run criterias multithread
+cat criteria | xargs -n 3 -P 8 ./umbu >>../monitoramento/procs
+# criteria should follow this pattern
+# name_tif.tif weight p_parameter
+
+input=""
+
+for f in out.*.tif; do
+  input=$input" "$f
+done
+
+# Sum all flow results
+./merge$input >> ../monitoramento/procs

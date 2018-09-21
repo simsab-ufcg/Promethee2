@@ -1,0 +1,21 @@
+#!/bin/bash
+
+rm monitoramento/procs
+
+./monitoramento/collect-cpu-usage.sh >monitoramento/cpu-usage &
+./monitoramento/collect-disk-usage.sh >monitoramento/disk-usage &
+./monitoramento/collect-memory-usage.sh >monitoramento/memory-usage &
+
+cd src
+
+./run
+
+cd ..
+
+ps -ef | grep ./collect | awk '{print $2}' | xargs -n 1 -P 4 kill -9
+
+cd monitoramento
+
+(cat procs | grep "end") > filter-procs
+
+Rscript plot-usages.r cpu-usage memory-usage disk-usage filter-procs
