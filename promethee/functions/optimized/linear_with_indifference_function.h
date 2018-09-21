@@ -2,7 +2,7 @@
 
     #define LINEAR_WITH_INDIFFERENCE
 
-    #include "../../promethee_function.h"
+    #include "promethee_function.h"
 
     struct LinearWithIndifferenceFunction : PrometheeFunction {
         

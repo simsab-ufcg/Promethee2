@@ -3,7 +3,7 @@
     #define PROMETHEE_FUN_INCLUDED
     
     #include <vector>
-    #include "types.h"
+    #include "../../types.h"
     #include <algorithm>
     
     using namespace std;
