@@ -3,6 +3,7 @@
 #include <time.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 using namespace std;
 
 using ldouble = double;
@@ -197,22 +198,16 @@ void generateChunkOutTif(TIFF *input, vector<ldouble> &values, vector<ldouble> &
 
 void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldouble> & sumAccum, vector<unsigned int> &cntAccum){
 
-    logger("FlowCalc[start]");
-    //logger("Generate-OpeningOutputFiles[start]");
+    logger("FlowCalc start");
     TIFF *out = TIFFOpen(outputFile.c_str(), "rm");
     TIFF *nxt = openFile(nextFile);
-    //logger("Generate-OpeningOutputFiles");
 
     ldouble *line = new ldouble[width];
     ldouble *outline = new ldouble[width];
     for (int i = 0; i < height; i++){
 
-        //logger("Generate-OpeningInputFiles[start]");
         TIFFReadScanline(input, line, i);
         TIFFReadScanline(out, outline, i);
-        //logger("Generate-OpeningInputFiles");
-
-        //logger("Generate-flowCalc[start]");
         for (int j = 0; j < width; j++) {
             if(line[j] < 0 || isnan(line[j]))
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
@@ -220,17 +215,12 @@ void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldoub
                 outline[j] += linear.getPositiveDelta(values, line[j], sumAccum, weight, cntAccum) - linear.getNegativeDelta(values, line[j], sumAccum, weight, cntAccum);
         }
 	
-        //logger("Generate-flowCalc");
-        //logger("Generate-WritingLineResult[start]");
         TIFFWriteScanline(nxt, outline, i);
-        //logger("Generate-WritingLineResult");
     }
-    //logger("Generate-ClosingTiffs[start]");
     TIFFClose(nxt);
     TIFFClose(out);
-    //logger("Generate-ClosingTiffs");
     swap(outputFile, nextFile);
-    logger("FlowCalc[end]");
+    logger("FlowCalc end");
 }
 
 
@@ -239,7 +229,7 @@ void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldoub
 **/
 int main(int argc, char *argv[]){
 
-    logger("Umbu[start]");
+    logger("Umbu start");
     string criteriaName = argv[1];
     outputFile = "out." + criteriaName;
     nextFile = "nxt." + criteriaName;
@@ -248,41 +238,30 @@ int main(int argc, char *argv[]){
 
     linear = LinearFunction({pparameter});
 
-    logger("OpeningInput[start]");
-
     TIFF *input = TIFFOpen(criteriaName.c_str(), "rm");
     TIFFGetField(input, TIFFTAG_IMAGELENGTH, &height);
     TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(input, TIFFTAG_SAMPLESPERPIXEL, &samplePerPixel);
-    // TIFFGetField(input, TIFFTAG_STRIPOFFSETS, &stripOffsets);
 
-    logger("OpeningInput[end]");
-
-    logger("CreatingOutputFile[start]");
+    logger("CreatingOutputFile start");
 
     setupOutput(outputFile);
 
-    logger("CreatingOutputFile[end]");
+    logger("CreatingOutputFile end");
 
     ldouble *line = new ldouble[width];
     int idx = 0;
-    //logger("LoopChunksProcessing[start]");
-    map<double, int> cnt;
+    map<double, int> cnt;    
+    logger("InitializeChunk-"+ to_string(idx) + " start");
     for(int i = 0; i < height; i++){
-	logger("Initialize Chunk[start]" + idx);
-        //logger("ProcessLine[start]");
-        // logger("ProcessLine_" + to_string(i) + "_" + to_string(height) + "_[start]");
         TIFFReadScanline(input, line, i);
         for(int j = 0; j < width; j++)
             if(line[j] < 0 || isnan(line[j]));
             else
-                cnt[line[j]]++;
-        //logger("ProcessLine[end]");
-        // logger("ProcessLine_" + to_string(i) + "_" + to_string(height) + "_[end]");
-	logger("Initialize Chunk[end]" + idx);        
+                cnt[line[j]]++;       
 	if(cnt.size() > bound){
-	    
-            logger("PreProcessChunk[start]" + idx);
+            logger("InitializeChunk-"+ to_string(idx) + " end");
+	    logger("PreProcessChunk-"+ to_string(idx) + " start");
             vector<ldouble> values;
             for(auto it : cnt) values.push_back(it.first);
             vector<ldouble> sumAcc;
@@ -298,17 +277,15 @@ int main(int argc, char *argv[]){
                 countAcc.push_back(scnt);
             }
             cnt.clear();
-            logger("PreProcessChunk[end]" + idx);
-            //logger("GeneratingOutputChunk");
+	    logger("PreProcessChunk-"+ to_string(idx) + " end");
             generateChunkOutTifUnbu(input, values, sumAcc, countAcc);
-            //logger("GeneratingOutputChunk" + idx);
 	    idx++;
+            logger("InitializeChunk-"+ to_string(idx) + " start");
         }
     }
-    //logger("LoopChunksProcessing[end]");
-    //logger("IncompleteChunkProcessing[start]");
+    logger("InitializeChunk-"+ to_string(idx) + " end");
     if(cnt.size() > 0){
-        logger("PreProcessChunk[start]" + idx);
+        logger("PreProcessChunk-"+ to_string(idx) + " start");
         vector<ldouble> values;
         for(auto it : cnt) values.push_back(it.first);
         vector<ldouble> sumAcc;
@@ -324,15 +301,12 @@ int main(int argc, char *argv[]){
             countAcc.push_back(scnt);
         }
         cnt.clear();
-        logger("PreProcessChunk[end]" + idx);
-        //logger("GeneratingOutputChunk[start]");
+        logger("PreProcessChunk-"+ to_string(idx) + " end");
         generateChunkOutTifUnbu(input, values, sumAcc, countAcc);
-        //logger("GeneratingOutputChunk" + idx);
         idx++;
     }
-    //logger("IncompleteChunkProcessing");
 
     TIFFClose(input);
-    logger("Umbu[end]");
+    logger("Umbu end");
     return 0;
 }
