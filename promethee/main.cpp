@@ -1,10 +1,10 @@
 #include "types.h"
 #include "data.h"
 #include "normalize.h"
-#include "promethee.h"
+#include "optimized/promethee_opt.h"
 #include "inputreader.h"
 #include "outputwriter.h"
-#include "promethee_vanilla.h"
+#include "vanilla/promethee_vanilla.h"
 #include <iostream>
 #include <dirent.h>
 
@@ -133,39 +133,16 @@ int main(int argc, char *argv[]){
   }
 
   for(int i = 0; i < valFiles.size(); i++){
-
-    string inputFile = inputDirectory + valFiles[i] + INPUT_FILE_SUFFIX;
-    string metaFile = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
-
-    cerr << "reading " << inputFile << endl;
-    cerr << "reading " << metaFile << endl;
-
-    // reading matrix of values in which each cell represent the pixel's value for a certain criteria
-    Matrix nmatrix = inputReader.readMatrix(inputFile);
-    MatrixMetaData metaData = inputReader.readMetaData(metaFile, opt_flag);
-
-    // reading the criteria weight
-    // ldouble weight = atof(argv[i + 1]);
-
-    data.addCriteria(nmatrix, metaData);
+    valFiles[i] = inputDirectory + valFiles[i] + INPUT_FILE_SUFFIX;
+    metaFiles[i] = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
   }
 
-  validateInput(data, ((int) valFiles.size()));
-  data.normalizeWeights();
-
-  // applying promethee to the given data and generating its results
-  PrometheeResult result;
-
-  if(opt_flag){
-    Promethee promethee = Promethee();
-    result = promethee.process(data);
-  } else {
-    PrometheeVanilla promethee = PrometheeVanilla();
-    result = promethee.process(data);
-  }
-  OutputWriter outputWriter = OutputWriter();
-
-  // storing the generated result
-  outputWriter.write(PATH_TO_OUTPUT_DIRECTORY, result);
+  Promethee* res;
+  if(opt_flag)
+    res = new PrometheeOpt();
+  else
+    res = new PrometheeVanilla();
+  res->init(valFiles, metaFiles, PATH_TO_OUTPUT_DIRECTORY);
+  res->process();
   return 0;
 }

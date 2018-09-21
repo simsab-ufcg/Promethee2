@@ -1,5 +1,4 @@
 #include "inputreader.h"
-#include "linear_function.h"
 #include <iostream>
 #include <limits>
 #include <cmath>
