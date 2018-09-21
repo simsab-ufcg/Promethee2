@@ -18,6 +18,5 @@ run: $(OBJS)
 	$(CC) -o $@ $^ 
 
 clean: 
-	rm -rf promethee/*.o
-	rm -rf promethee/vanilla/*.o
+	rm -rf $(OBJS)
 	rm -f run

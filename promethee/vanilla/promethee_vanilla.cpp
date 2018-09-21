@@ -1,6 +1,6 @@
 #include "promethee_vanilla.h"
-#include "inputreader.h"
-#include "outputwriter.h"
+#include "../inputreader.h"
+#include "../outputwriter.h"
 
 Data PrometheeVanilla::readData(){
   InputReader inputReader = InputReader();

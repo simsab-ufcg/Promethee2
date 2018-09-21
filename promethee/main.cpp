@@ -4,7 +4,7 @@
 #include "promethee_opt.h"
 #include "inputreader.h"
 #include "outputwriter.h"
-#include "promethee_vanilla.h"
+#include "vanilla/promethee_vanilla.h"
 #include <iostream>
 #include <dirent.h>
 
