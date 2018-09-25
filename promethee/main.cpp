@@ -29,6 +29,24 @@ void validateInput(Data data, int nMatrices) {
   }
 }
 
+vector<string> convertToVector(int argc, char * argv[]){
+  vector<string> args;
+  for(int i = 1; i < argc; i++) args.push_back(argv[i]);
+  return args;
+}
+
+bool hasFlag(vector<string> & args, string flag){
+  int size = args.size();
+  for(int i = 0; i < size; i++){
+    if(args[i] == flag){
+      for(int j = i + 1; j < size; j++) args[j - 1] = args[j];
+      args.resize(size - 1);
+      return true;
+    }
+  }
+  return false;
+}
+
 int main(int argc, char *argv[]){
 
   //lambdas
@@ -87,21 +105,20 @@ int main(int argc, char *argv[]){
   const string INPUT_FILE_SUFFIX = ".input";
   const string META_FILE_SUFFIX = ".meta";
 
-  const int INPUT_DIRECTORY_INDEX = 1;
-  const int META_DIRECTORY_INDEX = 2;
-  const int OUTPUT_DIRECTORY_INDEX = 3;
-  const int IS_OPT_FLAG_INDEX = 4;
+  const int INPUT_DIRECTORY_INDEX = 0;
+  const int META_DIRECTORY_INDEX = 1;
+  const int OUTPUT_DIRECTORY_INDEX = 2;
 
-  bool opt_flag = true;
+  vector<string> args = convertToVector(argc, argv);
 
-  const string PATH_TO_OUTPUT_DIRECTORY(validDir(argv[OUTPUT_DIRECTORY_INDEX]));
+  bool opt_flag = !hasFlag(args, "-V");
+  bool hq_flag = hasFlag(args, "-HQ");
 
-  if(argc < 4 || argc > 5){
+  const string PATH_TO_OUTPUT_DIRECTORY = validDir(args[OUTPUT_DIRECTORY_INDEX]);
+
+  if(args.size() != 3){
     cerr << "Arguments are invalid!";
     exit(0);
-  }else if(argc == 5){
-    if(string(argv[IS_OPT_FLAG_INDEX]) == "-V")
-      opt_flag = false;
   }
 
   // argv in format (name_of_file, weight)
@@ -114,13 +131,14 @@ int main(int argc, char *argv[]){
   struct dirent *directory;
 
   /* input directory */ 
-  string inputDirectory(validDir(argv[INPUT_DIRECTORY_INDEX]));
+  string inputDirectory = validDir(args[INPUT_DIRECTORY_INDEX]);
   valFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
 
   /* meta directory */ 
-  string metaDirectory(validDir(argv[META_DIRECTORY_INDEX]));
+  string metaDirectory = validDir(args[META_DIRECTORY_INDEX]);
   metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
 
+  cout << inputDirectory << " " << metaDirectory << " " << PATH_TO_OUTPUT_DIRECTORY << endl;
   /* output directory */
   filterDirectoryFiles(PATH_TO_OUTPUT_DIRECTORY, "");
 
