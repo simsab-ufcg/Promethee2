@@ -113,13 +113,20 @@ int main(int argc, char *argv[]){
 
   bool opt_flag = !hasFlag(args, "-V");
   bool hq_flag = hasFlag(args, "-HQ");
+  int divideBy = -1;
 
   const string PATH_TO_OUTPUT_DIRECTORY = validDir(args[OUTPUT_DIRECTORY_INDEX]);
 
-  if(args.size() != 3){
-    cerr << "Arguments are invalid!";
+  if(args.size() < 3 || args.size() > 4){
+    cerr << "Error: Arguments are invalid!";
     exit(0);
   }
+
+  if(args.size() == 4){
+    divideBy = atoi(args.back().c_str());
+  }
+
+  // cout << divideBy << endl;
 
   // argv in format (name_of_file, weight)
   Data data = Data();
@@ -138,7 +145,6 @@ int main(int argc, char *argv[]){
   string metaDirectory = validDir(args[META_DIRECTORY_INDEX]);
   metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
 
-  cout << inputDirectory << " " << metaDirectory << " " << PATH_TO_OUTPUT_DIRECTORY << endl;
   /* output directory */
   filterDirectoryFiles(PATH_TO_OUTPUT_DIRECTORY, "");
 
@@ -146,7 +152,7 @@ int main(int argc, char *argv[]){
   sort(metaFiles.begin(), metaFiles.end());
 
   if(valFiles != metaFiles) { // files don't match
-    cout << "Error: not every file has its metadata accordingly or vice versa\n";
+    cerr << "Error: not every file has its metadata accordingly or vice versa\n";
     return 0;
   }
 
@@ -160,7 +166,7 @@ int main(int argc, char *argv[]){
     res = new PrometheeOpt();
   else
     res = new PrometheeVanilla();
-  res->init(valFiles, metaFiles, PATH_TO_OUTPUT_DIRECTORY);
+  res->init(valFiles, metaFiles, PATH_TO_OUTPUT_DIRECTORY, divideBy);
   res->process();
   return 0;
 }

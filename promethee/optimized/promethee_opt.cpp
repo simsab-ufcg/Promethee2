@@ -31,6 +31,7 @@ void PrometheeOpt::process() {
   Matrix negativeFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
   Matrix netFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
   
+  int studyArea = 0;
   // applying the optimized promethee method (using linear preference function only)
   for(int criteria = 0; criteria < ncriterias; criteria++){
 
@@ -50,6 +51,7 @@ void PrometheeOpt::process() {
 
     sort(values.begin(), values.end());
 
+    studyArea = values.size();
     int nvalues = values.size();
     vector<ldouble> cummulative(nvalues, 0);
 
@@ -75,11 +77,12 @@ void PrometheeOpt::process() {
     }
   }
 
+  int denominator = (this->divideBy != -1 ? this->divideBy : studyArea);
   // applying a not standard normalization (but used by grass)
   for(int line = 0; line < nlines; line++)
     for(int column = 0; column < ncolumns; column++){
-      positiveFlow[line][column] /= ncriterias;
-      negativeFlow[line][column] /= ncriterias;
+      positiveFlow[line][column] /= denominator;
+      negativeFlow[line][column] /= denominator;
     }
 
   // calculating global flow
