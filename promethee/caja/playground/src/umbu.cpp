@@ -223,6 +223,14 @@ void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldoub
     logger("FlowCalc end");
 }
 
+void swapFiles(string filea, string fileb){
+    string tmpFile = "tmpfile.tif";
+    if(rename(filea.c_str(), tmpFile.c_str()) == 0){
+        if(rename(tmpFile.c_str(), fileb.c_str()) == 0){
+            
+        }
+    }
+}
 
 /** 
  * ./run filename weight pparameter
