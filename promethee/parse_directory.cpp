@@ -50,3 +50,32 @@ vector<string> filterDirectoryFiles(string directoryName, string suffix){
     closedir(dirp);
     return files;
 };
+
+void parseInputAndMeta(vector<string> args, vector<string> & inputFiles, vector<string> & metaFiles, string &outputDirectory) {
+    const string INPUT_FILE_SUFFIX = ".input";
+    const string META_FILE_SUFFIX = ".meta";
+
+    const int INPUT_DIRECTORY_INDEX = 0;
+    const int META_DIRECTORY_INDEX = 1;
+    const int OUTPUT_DIRECTORY_INDEX = 2;
+
+    string inputDirectory = validDir(args[INPUT_DIRECTORY_INDEX]);
+    string metaDirectory = validDir(args[META_DIRECTORY_INDEX]);
+    outputDirectory = validDir(args[OUTPUT_DIRECTORY_INDEX]);
+
+    inputFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
+    metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
+
+    sort(inputFiles.begin(), inputFiles.end());
+    sort(metaFiles.begin(), metaFiles.end());
+
+    if (inputFiles != metaFiles){ // files don't match
+        cerr << "Error: not every file has its metadata accordingly or vice versa\n";
+        exit(0);
+    }
+
+    for (int i = 0; i < inputFiles.size(); i++){
+        inputFiles[i] = inputDirectory + inputFiles[i] + INPUT_FILE_SUFFIX;
+        metaFiles[i] = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
+    }
+}
