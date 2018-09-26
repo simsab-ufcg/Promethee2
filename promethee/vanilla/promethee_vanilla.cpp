@@ -1,6 +1,8 @@
 #include "promethee_vanilla.h"
 #include "../inputreader.h"
 #include "../outputwriter.h"
+#include "../parse_directory.h"
+#include <algorithm>
 
 Data PrometheeVanilla::readData(){
   InputReader inputReader = InputReader();
@@ -14,6 +16,38 @@ Data PrometheeVanilla::readData(){
   return data;
 }
 
+void PrometheeVanilla::init(vector<string> args, int divideBy){
+	this->divideBy = divideBy;
+
+	const string INPUT_FILE_SUFFIX = ".input";
+	const string META_FILE_SUFFIX = ".meta";
+
+	const int INPUT_DIRECTORY_INDEX = 0;
+	const int META_DIRECTORY_INDEX = 1;
+	const int OUTPUT_DIRECTORY_INDEX = 2;
+
+	string inputDirectory = validDir(args[INPUT_DIRECTORY_INDEX]);
+	string metaDirectory = validDir(args[META_DIRECTORY_INDEX]);
+	string outputDirectory = validDir(args[OUTPUT_DIRECTORY_INDEX]);
+
+	vector<string> inputFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
+	vector<string> metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
+
+	sort(inputFiles.begin(), inputFiles.end());
+	sort(metaFiles.begin(), metaFiles.end());
+
+	if (inputFiles != metaFiles){ // files don't match
+	}
+
+	for (int i = 0; i < inputFiles.size(); i++){
+		inputFiles[i] = inputDirectory + inputFiles[i] + INPUT_FILE_SUFFIX;
+		metaFiles[i] = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
+	}
+
+	this->inputFiles = inputFiles;
+	this->metaFiles = metaFiles;
+	this->pathToOutput = outputDirectory;
+}
 
 void PrometheeVanilla::process(){
 
@@ -31,6 +65,13 @@ void PrometheeVanilla::process(){
 
 	int studyArea = 0;
 
+	for(int line = 0; line < nlines; line++)
+		for(int column = 0; column < ncolumns; column++){
+			if(validPixels[line][column]){
+				studyArea++;
+			}
+		}
+
   	for(int criteria = 0; criteria < ncriterias; criteria++){
 
 		Matrix matrix = data.getCriteriaMatrix(criteria);
@@ -43,8 +84,6 @@ void PrometheeVanilla::process(){
 			cerr << (100.0 * (criteria * nlines + line + 1))/(ncriterias * nlines) << "%"<< endl;
 			for(int column = 0; column < ncolumns; column++){
 				if(!validPixels[line][column]) continue;
-				
-				studyArea += 1;
 				
 				for(register int line2 = 0; line2 < nlines; line2++){
 					for(register int column2 = 0; column2 < ncolumns; column2++){

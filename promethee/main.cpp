@@ -47,126 +47,43 @@ bool hasFlag(vector<string> & args, string flag){
   return false;
 }
 
+string getCmdOption(vector<string> & args, string cmd){
+  int size = args.size();
+  cmd = cmd + "=";
+  for(int i = 0; i < size; i++){
+    if(args[i].find(cmd) == 0){
+      string res = args[i].substr(cmd.size());
+      for(int j = i + 1; j < size; j++) args[j - 1] = args[j];
+      args.resize(size - 1);
+      return res;
+    }
+  }
+  return "";
+}
+
 int main(int argc, char *argv[]){
-
-  //lambdas
-  auto validDir = [](string directory){
-    if(directory.size() >= 1 && directory.back() != '/')
-      return directory + '/';
-    return directory;
-  };
-
-  auto endsWith = [](string text, string pattern){
-    bool result = false;
-    if(text.size() > pattern.size()){ 
-      string match = text.substr(text.size() - pattern.size(), pattern.size());
-      if(match == pattern)
-        result = true;
-    }
-    return result;
-  };
-
-  auto readFiles = [](DIR* dir){
-    vector<string> fileNames;
-    struct dirent * directory;
-    while((directory = readdir(dir)) != NULL){
-      string fileName(directory->d_name);
-      fileNames.push_back(fileName);
-    }
-    return fileNames;
-  };
-
-  auto filterDirectoryFiles = [readFiles, endsWith](string directoryName, string suffix){
-    DIR* dirp = opendir(directoryName.c_str());
-    vector<string> files;
-    if(dirp){
-      
-      files = readFiles(dirp);
-      
-      auto iterator = remove_if(files.begin(), files.end(), [endsWith, suffix](string fileName){
-        return ! endsWith(fileName, suffix);
-      });
-      
-      files.erase(iterator, files.end());
-      
-      for(string & file : files)
-        file = file.substr(0, file.size() - suffix.size());
-
-    } else {
-      cerr << "Directory " << directoryName.substr(0, directoryName.size() - 1) << " not found" << endl;
-      exit(0);
-    }
-    
-    closedir(dirp);
-    return files;
-  };
-
-  //constants
-  const string INPUT_FILE_SUFFIX = ".input";
-  const string META_FILE_SUFFIX = ".meta";
-
-  const int INPUT_DIRECTORY_INDEX = 0;
-  const int META_DIRECTORY_INDEX = 1;
-  const int OUTPUT_DIRECTORY_INDEX = 2;
 
   vector<string> args = convertToVector(argc, argv);
 
-  bool opt_flag = !hasFlag(args, "-V");
-  bool hq_flag = hasFlag(args, "-HQ");
+  bool isVan = hasFlag(args, "-van");
+  bool isUmbu = hasFlag(args, "-um");
+  bool isOpt = !isVan && !isOpt;
+  
+  string hq_flag = getCmdOption(args, "-hq");
   int divideBy = -1;
 
-  const string PATH_TO_OUTPUT_DIRECTORY = validDir(args[OUTPUT_DIRECTORY_INDEX]);
-
-  if(args.size() < 3 || args.size() > 4){
-    cerr << "Error: Arguments are invalid!";
-    exit(0);
-  }
-
-  if(args.size() == 4){
-    divideBy = atoi(args.back().c_str());
-  }
-
-  // cout << divideBy << endl;
-
-  // argv in format (name_of_file, weight)
-  Data data = Data();
-  InputReader inputReader = InputReader();
-
-  vector<string> valFiles, metaFiles;
-
-  DIR           *dirp;
-  struct dirent *directory;
-
-  /* input directory */ 
-  string inputDirectory = validDir(args[INPUT_DIRECTORY_INDEX]);
-  valFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
-
-  /* meta directory */ 
-  string metaDirectory = validDir(args[META_DIRECTORY_INDEX]);
-  metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
-
-  /* output directory */
-  filterDirectoryFiles(PATH_TO_OUTPUT_DIRECTORY, "");
-
-  sort(valFiles.begin(), valFiles.end());
-  sort(metaFiles.begin(), metaFiles.end());
-
-  if(valFiles != metaFiles) { // files don't match
-    cerr << "Error: not every file has its metadata accordingly or vice versa\n";
-    return 0;
-  }
-
-  for(int i = 0; i < valFiles.size(); i++){
-    valFiles[i] = inputDirectory + valFiles[i] + INPUT_FILE_SUFFIX;
-    metaFiles[i] = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
+  if(hq_flag.size()){
+    divideBy = atoi(hq_flag.c_str());
   }
 
   Promethee* res;
-  if(opt_flag)
+  if(isOpt)
     res = new PrometheeOpt();
-  else
+  else if(isVan)
     res = new PrometheeVanilla();
-  res->init(valFiles, metaFiles, PATH_TO_OUTPUT_DIRECTORY, divideBy);
+  else if(isUmbu);
+
+  res->init(args, divideBy);
   res->process();
   return 0;
 }

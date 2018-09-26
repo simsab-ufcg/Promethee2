@@ -12,7 +12,7 @@ struct Promethee{
 
     Promethee();
 
-    virtual void init(vector<string> inputFiles, vector<string> metaFiles, string pathToOutput, int divideBy) ;
+    virtual void init(vector<string> args, int divideBy) ;
 
     virtual void process();
 };

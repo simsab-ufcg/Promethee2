@@ -4,6 +4,7 @@
 #include <iostream>
 #include "../inputreader.h"
 #include "../outputwriter.h"
+#include "../parse_directory.h"
 
 Data PrometheeOpt::readData(){
   InputReader inputReader = InputReader();
@@ -15,6 +16,40 @@ Data PrometheeOpt::readData(){
   }
   data.normalizeWeights();
   return data;
+}
+
+void PrometheeOpt::init(vector<string> args, int divideBy){
+  this->divideBy = divideBy;
+
+  const string INPUT_FILE_SUFFIX = ".input";
+  const string META_FILE_SUFFIX = ".meta";
+
+  const int INPUT_DIRECTORY_INDEX = 0;
+  const int META_DIRECTORY_INDEX = 1;
+  const int OUTPUT_DIRECTORY_INDEX = 2;
+
+  string inputDirectory = validDir(args[INPUT_DIRECTORY_INDEX]);
+  string metaDirectory = validDir(args[META_DIRECTORY_INDEX]);
+  string outputDirectory = validDir(args[OUTPUT_DIRECTORY_INDEX]);
+
+  vector<string> inputFiles = filterDirectoryFiles(inputDirectory, INPUT_FILE_SUFFIX);
+  vector<string> metaFiles = filterDirectoryFiles(metaDirectory, META_FILE_SUFFIX);
+
+  sort(inputFiles.begin(), inputFiles.end());
+  sort(metaFiles.begin(), metaFiles.end());
+
+  if(inputFiles != metaFiles){ // files don't match
+
+  }
+
+  for(int i = 0; i < inputFiles.size(); i++){
+    inputFiles[i] = inputDirectory + inputFiles[i] + INPUT_FILE_SUFFIX;
+    metaFiles[i] = metaDirectory + metaFiles[i] + META_FILE_SUFFIX;
+  }
+
+  this->inputFiles = inputFiles;
+  this->metaFiles = metaFiles;
+  this->pathToOutput = outputDirectory;
 }
 
 void PrometheeOpt::process() {

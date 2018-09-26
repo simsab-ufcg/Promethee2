@@ -8,8 +8,13 @@
   #include <algorithm>
   
   struct PrometheeOpt : Promethee {
+
+    string pathToOutput;
+    vector<string> inputFiles, metaFiles;
+
     Data readData();
     void process();
+    void init(vector<string> args, int divideBy);
   };
 
 #endif

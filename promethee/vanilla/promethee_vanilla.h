@@ -13,6 +13,7 @@
   struct PrometheeVanilla : Promethee {
     Data readData();
     void process();
+    void init(vector<string> args, int divideBy);
   };
 
 #endif
