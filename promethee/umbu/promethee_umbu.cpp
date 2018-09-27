@@ -69,6 +69,31 @@ void PrometheeUmbu::generateChunkOutTifUnbu(string &outputFile, string &nextFile
     swap(outputFile, nextFile);
 }
 
+void PrometheeUmbu::divide(string &outputFile, string &nextFile, TIFF *input){
+    TIFF *out = TIFFOpen(outputFile.c_str(), "rm");
+    TIFF *nxt = openFile(nextFile, this->width, this->height);
+
+    ldouble *line = new ldouble[this->width];
+    ldouble *outline = new ldouble[this->width];
+    int denominator = (this->divideBy != -1 ? this->divideBy : this->area - 1);
+    for (int i = 0; i < this->height; i++){
+
+        TIFFReadScanline(input, line, i);
+        TIFFReadScanline(out, outline, i);
+        for (int j = 0; j < this->width; j++) {
+            if(line[j] < 0 || isnan(line[j]))
+                outline[j] += -sqrt(-1.0); // ?? this should be nan
+            else
+                outline[j] += line[j] / denominator;
+        }
+	
+        TIFFWriteScanline(nxt, outline, i);
+    }
+    TIFFClose(nxt);
+    TIFFClose(out);
+    swap(outputFile, nextFile);
+}
+
 void PrometheeUmbu::processChunk(map<double, int> & cnt, string & outputFile, string & nextFile, TIFF * input){
     vector<ldouble> values;
     for(auto it : cnt) values.push_back(it.first);
@@ -103,13 +128,13 @@ void PrometheeUmbu::process(){
     ldouble *line = new ldouble[width];
     map<double, int> cnt;
     
-    int studyArea = 0;
+    this->area = 0;
     for(int i = 0; i < height; i++){
         TIFFReadScanline(input, line, i);
         for(int j = 0; j < width; j++){
             if(!isnan(line[j])){
                 cnt[line[j]]++;
-                studyArea++;
+                this->area++;
             }
         }
         if(cnt.size() >= this->chunkBound){
@@ -119,6 +144,8 @@ void PrometheeUmbu::process(){
     if(cnt.size() > 0){
         this->processChunk(cnt, outputFile, nextFile, input);
     }
+
+    this->divide(outputFile, nextFile, input);
 
     TIFFClose(input);
 }

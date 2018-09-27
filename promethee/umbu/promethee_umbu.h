@@ -12,6 +12,7 @@ struct PrometheeUmbu : Promethee {
     int divideBy;
     int chunkBound;
     bool isMax;
+    int area;
 
     int height, width, samplePerPixel;
 
@@ -22,4 +23,5 @@ struct PrometheeUmbu : Promethee {
 private:
     void processChunk(map<double, int> & cnt, string & outputFile, string & nextFile, TIFF * input);
     void generateChunkOutTifUnbu(string &outputFile, string &nextFile, TIFF *input, vector<ldouble> & values, vector<ldouble> & sumAccum, vector<unsigned int> &cntAccum);
+    void divide(string &output, string &nextFile, TIFF *input);
 };
