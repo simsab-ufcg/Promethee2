@@ -2,7 +2,7 @@
 
 #include "promethee_umbu_fun.h"
 
-struct LinearFunction : PrometheeUmbuFunction {
+struct LinearUmbuFunction : PrometheeUmbuFunction {
 
     ldouble getPParameter();
 

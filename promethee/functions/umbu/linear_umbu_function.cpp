@@ -1,11 +1,11 @@
-#include "linear_function.h"
+#include "linear_umbu_function.h"
 #include <algorithm>
 
-ldouble LinearFunction::getPParameter(){
+ldouble LinearUmbuFunction::getPParameter(){
     return this->params[0];
 }
 
-ldouble LinearFunction::getPositiveDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
+ldouble LinearUmbuFunction::getPositiveDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
     ldouble sum = 0;
     {
         int ptr2 = lower_bound(values.begin(), values.end(), queryValue - this->getPParameter()) - values.begin();
@@ -29,7 +29,7 @@ ldouble LinearFunction::getPositiveDelta(vector<ldouble> &values, ldouble queryV
     return sum;
 }
 
-ldouble LinearFunction::getNegativeDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
+ldouble LinearUmbuFunction::getNegativeDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
     ldouble sum = 0;
     {
         int ptr2 = upper_bound(values.begin(), values.end(), queryValue + this->getPParameter()) - values.begin();
