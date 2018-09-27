@@ -5,10 +5,12 @@
 
 struct PrometheeUmbu : Promethee {
     string filename;
-    double weigth;
+    double weight;
     int maxDistinctValues;
     PrometheeUmbuFunction *function;
     int divideBy;
+    int chunkBound;
+    bool isMax;
 
     void init(vector<string> args, int divideBy);
 };

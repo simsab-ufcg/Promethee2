@@ -4,6 +4,8 @@
 
 struct LinearWithIndifferenceUmbuFunction : PrometheeUmbuFunction {
 
+    LinearWithIndifferenceUmbuFunction(vector<ldouble> params): PrometheeUmbuFunction(params){}
+
     inline ldouble getPParameter();
     
     inline ldouble getQParameter();

@@ -4,7 +4,9 @@
 
 struct LinearUmbuFunction : PrometheeUmbuFunction {
 
-    ldouble getPParameter();
+    LinearUmbuFunction(vector<ldouble> params): PrometheeUmbuFunction(params){}
+
+    inline ldouble getPParameter();
 
     ldouble getPositiveDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt) override;
     
