@@ -311,9 +311,9 @@ int main(int argc, char *argv[]){
     }
 
     if(outputFile[0] != 'o'){
-        swapFiles(nextFile, outputFile);
+        swapFiles(outputFile, nextFile);
     }
-    
+
     TIFFClose(input);
     logger("Umbu end");
     return 0;
