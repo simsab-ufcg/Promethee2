@@ -224,11 +224,7 @@ void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldoub
 }
 
 void swapFiles(string filea, string fileb){
-    string tmpFile = "tmpfile.tif";
-    if(rename(filea.c_str(), tmpFile.c_str()) == 0){
-        if(rename(tmpFile.c_str(), fileb.c_str()) == 0){
-            
-        }
+    if(rename(filea.c_str(), fileb.c_str()) == 0){
     }
 }
 
@@ -314,6 +310,10 @@ int main(int argc, char *argv[]){
         idx++;
     }
 
+    if(outputFile[0] != 'o'){
+        swapFiles(nextFile, outputFile);
+    }
+    
     TIFFClose(input);
     logger("Umbu end");
     return 0;
