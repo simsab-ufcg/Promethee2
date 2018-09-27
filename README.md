@@ -8,7 +8,7 @@ An implementation of Promethee 2 based on the "PROMETHEE is not quadratic: An O(
 To build our project just run ```make``` command in the root directory.
 
 ## Run
-To run an promethee execution, execute the following command
+To run an promethee execution, execute the following command:
 ```
 ./run path/to/input/ path/to/meta/ path/to/output/
 ```

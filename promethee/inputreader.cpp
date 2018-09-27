@@ -1,5 +1,4 @@
 #include "inputreader.h"
-#include "linear_function.h"
 #include <iostream>
 #include <limits>
 #include <cmath>
@@ -32,7 +31,7 @@ MatrixMetaData InputReader::readMetaData(string path, bool is_opt){
   string token;
   vector<string> input;
 
-  while(in >> token) {
+  while(getline(in, token)) {
     input.push_back(token);
   }
 

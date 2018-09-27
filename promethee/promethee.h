@@ -1,13 +1,18 @@
-#ifndef PROMETHEE_INCLUDED
-  
-  #define PROMETHEE_INCLUDED
-  
-  #include "types.h"
-  #include "data.h"
-  #include <algorithm>
-  
-  struct Promethee {
-    PrometheeResult  process(Data data);
-  };
+#pragma once
 
-#endif
+#include <vector>
+#include <string>
+using namespace std;
+
+struct Promethee{
+
+    string pathToOutput;
+    vector<string> inputFiles, metaFiles;
+    int divideBy;
+
+    Promethee();
+
+    virtual void init(vector<string> args, int divideBy) ;
+
+    virtual void process();
+};

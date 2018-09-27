@@ -3,15 +3,16 @@
   #define PROMETHEE_FUNCTION_ADAPTER_INCLUDED
   
   #include "types.h"
-  #include "vanilla/comparison_function.h"
-  #include "vanilla/usual_function.h"
-  #include "vanilla/quasi_function.h"
-  #include "vanilla/linear_function.h"
-  #include "vanilla/level_function.h"
-  #include "vanilla/linear_indifference_function.h"
-  #include "vanilla/gaussian_function.h"
-  #include "promethee_function.h"
-  #include "linear_function.h"
+  #include "functions/vanilla/comparison_function.h"
+  #include "functions/vanilla/usual_function.h"
+  #include "functions/vanilla/quasi_function.h"
+  #include "functions/vanilla/linear_function.h"
+  #include "functions/vanilla/level_function.h"
+  #include "functions/vanilla/linear_indifference_function.h"
+  #include "functions/vanilla/gaussian_function.h"
+  #include "functions/optimized/promethee_function.h"
+  #include "functions/optimized/linear_function.h"
+  #include "functions/optimized/linear_with_indifference_function.h"
   #include <string>
 
   struct PrometheeFunctionAdapter{
@@ -34,7 +35,10 @@
       } else if(funType == "gaussian") {
         vanillaFunction = new GaussianComparator(params);
       }
-      optFunction = new LinearFunction(params);
+      if(funType == "linear")
+        optFunction = new LinearFunction(params);
+      else if(funType == "linearWithIndifference")
+        optFunction = new LinearWithIndifferenceFunction(params);
     };
 
     ldouble getPositiveDelta(vector<ldouble> & values, ldouble queryValue, vector<ldouble> & cummulative, ldouble weight);

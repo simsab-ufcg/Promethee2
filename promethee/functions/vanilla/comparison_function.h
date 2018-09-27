@@ -2,7 +2,7 @@
 
     #define COMPARISON_FUNCTION_INCLUDED
 
-    #include "../types.h"
+    #include "../../types.h"
 
     struct ComparisonFunction{
         vector<ldouble> parameters;
