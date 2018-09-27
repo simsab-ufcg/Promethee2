@@ -99,8 +99,8 @@ struct LinearFunction{
 
             int ptr = upper_bound(values.begin(), values.end(), queryValue) - values.begin();
             int amount = 0;
-            if(ptr > 0) amount += cnt[ptr - 1];
-            if(ptr2 > 0) amount -= cnt[ptr2 - 1];
+            if(ptr2 > 0) amount += cnt[ptr2 - 1];
+            if(ptr > 0) amount -= cnt[ptr - 1];
             if (amount > 0){
                 ldouble value = 0;
                 if (ptr2 > 0)
