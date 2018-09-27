@@ -173,28 +173,6 @@ void setupOutput(string outputFile){
 // output is the current output
 // tmp is the next output
 string outputFile, nextFile;
-void generateChunkOutTif(TIFF *input, vector<ldouble> &values, vector<ldouble> &sumAccum){
-
-    TIFF *out = TIFFOpen(outputFile.c_str(), "rm");
-    TIFF *nxt = openFile(nextFile);
-
-    ldouble *line = new ldouble[width];
-    ldouble *outline = new ldouble[width];
-    for (int i = 0; i < height; i++){
-        TIFFReadScanline(input, line, i);
-        TIFFReadScanline(out, outline, i);
-        for (int j = 0; j < width; j++) {
-            if(line[j] < 0 || isnan(line[j]))
-                outline[j] += -sqrt(-1.0); // ?? this should be nan
-            else
-                outline[j] += linear.getPositiveDelta(values, line[j], sumAccum, weight) - linear.getNegativeDelta(values, line[j], sumAccum, weight);
-        }
-        TIFFWriteScanline(nxt, outline, i);
-    }
-    TIFFClose(nxt);
-    TIFFClose(out);
-    swap(outputFile, nextFile);
-}
 
 void generateChunkOutTifUnbu(TIFF *input, vector<ldouble> & values, vector<ldouble> & sumAccum, vector<unsigned int> &cntAccum){
 

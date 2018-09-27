@@ -6,6 +6,8 @@
 #include "../functions/umbu/linear_with_indifference_umbu_function.h"
 #include "tiffio.h"
 #include "../plibtiff.h"
+#include <map>
+#include <cmath>
 
 /**
 ./run -um AEMMF.tif 0.47 -type=linear -chunk=1111 -ismax (args...)
@@ -43,6 +45,48 @@ void PrometheeUmbu::init(vector<string> args, int divideBy){
     }
 }
 
+void PrometheeUmbu::generateChunkOutTifUnbu(string &outputFile, string &nextFile, TIFF *input, vector<ldouble> & values, vector<ldouble> & sumAccum, vector<unsigned int> &cntAccum){
+    TIFF *out = TIFFOpen(outputFile.c_str(), "rm");
+    TIFF *nxt = openFile(nextFile, this->width, this->height);
+
+    ldouble *line = new ldouble[this->width];
+    ldouble *outline = new ldouble[this->width];
+    for (int i = 0; i < this->height; i++){
+
+        TIFFReadScanline(input, line, i);
+        TIFFReadScanline(out, outline, i);
+        for (int j = 0; j < this->width; j++) {
+            if(line[j] < 0 || isnan(line[j]))
+                outline[j] += -sqrt(-1.0); // ?? this should be nan
+            else
+                outline[j] += (*this->function).getPositiveDelta(values, line[j], sumAccum, weight, cntAccum) - (*this->function).getNegativeDelta(values, line[j], sumAccum, weight, cntAccum);
+        }
+	
+        TIFFWriteScanline(nxt, outline, i);
+    }
+    TIFFClose(nxt);
+    TIFFClose(out);
+    swap(outputFile, nextFile);
+}
+
+void PrometheeUmbu::processChunk(map<double, int> & cnt, string & outputFile, string & nextFile, TIFF * input){
+    vector<ldouble> values;
+    for(auto it : cnt) values.push_back(it.first);
+    vector<ldouble> sumAcc;
+    ldouble sum = 0;
+    for(auto &it : cnt) {
+        sum += it.first * it.second;
+        sumAcc.push_back(sum);
+    }
+    vector<unsigned int> countAcc;
+    unsigned int scnt = 0;
+    for(auto &it: cnt){
+        scnt += it.second;
+        countAcc.push_back(scnt);
+    }
+    cnt.clear();
+    this->generateChunkOutTifUnbu(outputFile, nextFile, input, values, sumAcc, countAcc);
+}
 
 void PrometheeUmbu::process(){
 
@@ -56,6 +100,25 @@ void PrometheeUmbu::process(){
 
     setupOutput(outputFile, this->width, this->height);
 
+    ldouble *line = new ldouble[width];
+    map<double, int> cnt;
     
+    int studyArea = 0;
+    for(int i = 0; i < height; i++){
+        TIFFReadScanline(input, line, i);
+        for(int j = 0; j < width; j++){
+            if(!isnan(line[j])){
+                cnt[line[j]]++;
+                studyArea++;
+            }
+        }
+        if(cnt.size() >= this->chunkBound){
+            this->processChunk(cnt, outputFile, nextFile, input);
+        }
+    }
+    if(cnt.size() > 0){
+        this->processChunk(cnt, outputFile, nextFile, input);
+    }
 
+    TIFFClose(input);
 }
