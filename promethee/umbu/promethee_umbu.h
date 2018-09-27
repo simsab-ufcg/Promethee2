@@ -8,7 +8,6 @@
 struct PrometheeUmbu : Promethee {
     string filename;
     double weight;
-    int maxDistinctValues;
     PrometheeUmbuFunction *function;
     int divideBy;
     int chunkBound;

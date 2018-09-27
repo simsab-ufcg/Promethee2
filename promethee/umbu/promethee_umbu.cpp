@@ -10,7 +10,7 @@
 #include <cmath>
 
 /**
-./run -um AEMMF.tif 0.47 -type=linear -chunk=1111 -ismax (args...)
+./run -um AEMMF.tif 0.47 -chunk=1111 -ismax -type=linear (args...)
 **/
 void PrometheeUmbu::init(vector<string> args, int divideBy){
     this->divideBy = divideBy;
@@ -59,7 +59,7 @@ void PrometheeUmbu::generateChunkOutTifUnbu(string &outputFile, string &nextFile
             if(line[j] < 0 || isnan(line[j]))
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             else
-                outline[j] += (*this->function).getPositiveDelta(values, line[j], sumAccum, weight, cntAccum) - (*this->function).getNegativeDelta(values, line[j], sumAccum, weight, cntAccum);
+                outline[j] += (this->isMax ? 1 : -1) * ((*this->function).getPositiveDelta(values, line[j], sumAccum, weight, cntAccum) - (*this->function).getNegativeDelta(values, line[j], sumAccum, weight, cntAccum));
         }
 	
         TIFFWriteScanline(nxt, outline, i);
