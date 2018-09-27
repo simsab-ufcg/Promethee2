@@ -147,5 +147,10 @@ void PrometheeUmbu::process(){
 
     this->divide(outputFile, nextFile, input);
 
+     if(outputFile[0] != 'o'){
+        rename(outputFile.c_str(), nextFile.c_str());
+    }
+
+
     TIFFClose(input);
 }
