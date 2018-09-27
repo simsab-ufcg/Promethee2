@@ -1,8 +1,11 @@
 #include "promethee_umbu.h"
 #include "../parse_args.h"
+#include "tiffio.h"
 #include <iostream>
 #include "../functions/umbu/linear_umbu_function.h"
 #include "../functions/umbu/linear_with_indifference_umbu_function.h"
+#include "tiffio.h"
+#include "../plibtiff.h"
 
 /**
 ./run -um AEMMF.tif 0.47 -type=linear -chunk=1111 -ismax (args...)
@@ -38,4 +41,21 @@ void PrometheeUmbu::init(vector<string> args, int divideBy){
     } else if(type == "linearWithIndifference"){
         this->function = new LinearWithIndifferenceUmbuFunction(params);
     }
+}
+
+
+void PrometheeUmbu::process(){
+
+    TIFF *input = TIFFOpen(this->filename.c_str(), "rm");
+    TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
+    TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
+    TIFFGetField(input, TIFFTAG_SAMPLESPERPIXEL, &this->samplePerPixel);
+
+    string nextFile = "nxt." + this->filename;
+    string outputFile = "out." + this->filename;
+
+    setupOutput(outputFile, this->width, this->height);
+
+    
+
 }

@@ -1,6 +1,6 @@
 CC=g++
 CFLAGS = -std=c++14
-LIBS = -lpthread
+LIBS = -lpthread -ltiff
 
 DEPS = promethee/*.h
 

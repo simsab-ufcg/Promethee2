@@ -12,5 +12,12 @@ struct PrometheeUmbu : Promethee {
     int chunkBound;
     bool isMax;
 
+    int height, width, samplePerPixel;
+
     void init(vector<string> args, int divideBy);
+
+    void process();
+
+private:
+    
 };
