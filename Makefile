@@ -4,7 +4,7 @@ LIBS = -lpthread
 
 DEPS = promethee/*.h
 
-SRCS = $(shell find -name *.cpp)
+SRCS = $(shell find promethee -name *.cpp)
 OBJS := $(addsuffix .o,$(basename $(SRCS)))
 
 all: run
