@@ -56,7 +56,7 @@ void PrometheeUmbu::generateChunkOutTifUnbu(string &outputFile, string &nextFile
         TIFFReadScanline(input, line, i);
         TIFFReadScanline(out, outline, i);
         for (int j = 0; j < this->width; j++) {
-            if(line[j] < 0 || isnan(line[j]))
+            if(isnan(line[j]))
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             else
                 outline[j] += (this->isMax ? 1 : -1) * ((*this->function).getPositiveDelta(values, line[j], sumAccum, weight, cntAccum) - (*this->function).getNegativeDelta(values, line[j], sumAccum, weight, cntAccum));
@@ -81,7 +81,7 @@ void PrometheeUmbu::divide(string &outputFile, string &nextFile, TIFF *input){
         TIFFReadScanline(input, line, i);
         TIFFReadScanline(out, outline, i);
         for (int j = 0; j < this->width; j++) {
-            if(line[j] < 0 || isnan(line[j]))
+            if(isnan(line[j]))
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             else
                 outline[j] += line[j] / denominator;
