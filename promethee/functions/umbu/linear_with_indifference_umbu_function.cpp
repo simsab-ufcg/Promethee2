@@ -1,14 +1,15 @@
 #include "linear_with_indifference_umbu_function.h"
+#include <algorithm>
 
-ldouble LinearWithIndiffereceUmbuFunction::getPParameter(){
+ldouble LinearWithIndifferenceUmbuFunction::getPParameter(){
     return params[0];
 }
 
-ldouble LinearWithIndiffereceUmbuFunction::getQParameter(){
+ldouble LinearWithIndifferenceUmbuFunction::getQParameter(){
     return params[1];
 }
 
-ldouble LinearWithIndiffereceUmbuFunction::getPositiveDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
+ldouble LinearWithIndifferenceUmbuFunction::getPositiveDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
     ldouble sum = 0;
     
     ldouble pParameter = this->getPParameter();
@@ -35,7 +36,7 @@ ldouble LinearWithIndiffereceUmbuFunction::getPositiveDelta(vector<ldouble> &val
     return sum;
 }
 
-ldouble LinearWithIndiffereceUmbuFunction::getNegativeDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
+ldouble LinearWithIndifferenceUmbuFunction::getNegativeDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
     ldouble sum = 0;
 
     ldouble pParameter = this->getPParameter();
