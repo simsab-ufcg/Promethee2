@@ -1,6 +1,10 @@
 #include "plibtiff.h"
 #include "types.h"
 
+/**
+ * Open a empty file, set width and height
+ * The other configs are magic (The lib documentation doesn't help much, but this values are the most used)
+ * */
 TIFF* openFile(string filename, int width, int height){
     TIFF* file = TIFFOpen(filename.c_str(), "w8m");
     TIFFSetField(file, TIFFTAG_IMAGEWIDTH     , width); 
@@ -19,6 +23,9 @@ TIFF* openFile(string filename, int width, int height){
     return file;
 }
 
+/**
+ * Creates a file with everything equal to 0
+ * */
 void setupOutput(string outputFile, int width, int height){
     TIFF *out = openFile(outputFile, width, height);
     ldouble *line = new ldouble[width];
