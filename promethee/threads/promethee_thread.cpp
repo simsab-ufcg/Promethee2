@@ -1,8 +1,29 @@
 #include "promethee_thread.h"
-#include "promethee_function_adapter.h"
-#include "normalize.h"
+#include "../promethee_function_adapter.h"
+#include "../normalize.h"
 #include <thread>
 #include <iostream>
+#include "../inputreader.h"
+#include "../outputwriter.h"
+#include "../parse_directory.h"
+
+Data PrometheeThread::readData(){
+  InputReader inputReader = InputReader();
+  Data data = Data();
+  for(int i = 0; i < this->inputFiles.size(); i++){
+    Matrix nmatrix = inputReader.readMatrix(this->inputFiles[i]);
+    MatrixMetaData metaData = inputReader.readMetaData(this->metaFiles[i], false);
+    data.addCriteria(nmatrix, metaData);
+  }
+  data.normalizeWeights();
+  return data;
+}
+
+void PrometheeThread::init(vector<string> args, int divideBy){
+  this->divideBy = divideBy;
+  parseInputAndMeta(args, this->inputFiles, this->metaFiles, this->pathToOutput);
+}
+
 
 void worker(argsThread args){
 
@@ -53,15 +74,12 @@ void worker(argsThread args){
       }
     }
 
-    cout << "completed" << endl;
 }
 
-void prt(){
+void PrometheeThread::process(){
 
-}
+    Data data = this->readData();
 
-
-PrometheeResult PrometheeThread::process(Data data){
     int ncriterias = data.matrices.size();
     int nlines = data.matrices[0].size();
     int ncolumns = data.matrices[0][0].size();
@@ -105,8 +123,6 @@ PrometheeResult PrometheeThread::process(Data data){
         threads[criteria] = thread(worker, myArgs);
     }
 
-    cout << "threads" << endl;
-
     for(int criteria = 0; criteria < ncriterias; criteria++)
         if(threads[criteria].joinable())
             threads[criteria].join();
@@ -123,10 +139,12 @@ PrometheeResult PrometheeThread::process(Data data){
             }
     }
 
+  int denominator = (this->divideBy == -1 ? validValues - 1 : this->divideBy);
+
   for(int line = 0; line < nlines; line++)
     for(int column = 0; column < ncolumns; column++){
-      positiveFlow[line][column] /= validValues - 1;
-      negativeFlow[line][column] /= validValues - 1;
+      positiveFlow[line][column] /= denominator;
+      negativeFlow[line][column] /= denominator;
     }
 
   // calculating global flow
@@ -145,6 +163,8 @@ PrometheeResult PrometheeThread::process(Data data){
 
   // normalizing results
   result.normalizedFlow = Normalizer().normalize(netFlow, validPixels);
-  return result;
+  
+  OutputWriter outputWriter = OutputWriter();
+  outputWriter.write(this->pathToOutput, result);
     
 }
