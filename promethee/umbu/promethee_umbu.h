@@ -5,6 +5,9 @@
 #include "tiffio.h"
 #include <map>
 
+/**
+ * Structure of promethee umbu
+ * */
 struct PrometheeUmbu : Promethee {
     string filename;
     double weight;
