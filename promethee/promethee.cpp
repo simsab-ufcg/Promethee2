@@ -6,10 +6,8 @@ Promethee::Promethee(){
 
 }
 
-void Promethee::init(vector<string> inputFiles, vector<string> metaFiles, string pathToOutput){
-    this->inputFiles = inputFiles;
-    this->metaFiles = metaFiles;
-    this->pathToOutput = pathToOutput;
+void Promethee::init(vector<string> args, int divideBy){
+    
 }
 
 void Promethee::process(){

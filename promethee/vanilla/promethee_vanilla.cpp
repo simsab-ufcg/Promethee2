@@ -1,6 +1,8 @@
 #include "promethee_vanilla.h"
 #include "../inputreader.h"
 #include "../outputwriter.h"
+#include "../parse_directory.h"
+#include <algorithm>
 
 Data PrometheeVanilla::readData(){
   InputReader inputReader = InputReader();
@@ -14,6 +16,10 @@ Data PrometheeVanilla::readData(){
   return data;
 }
 
+void PrometheeVanilla::init(vector<string> args, int divideBy){
+	this->divideBy = divideBy;
+	parseInputAndMeta(args, this->inputFiles, this->metaFiles, this->pathToOutput);
+}
 
 void PrometheeVanilla::process(){
 
@@ -29,6 +35,15 @@ void PrometheeVanilla::process(){
 	Matrix negativeFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
 	Matrix netFlow = Matrix(nlines, MatrixLine(ncolumns, 0.0));
 
+	int studyArea = 0;
+
+	for(int line = 0; line < nlines; line++)
+		for(int column = 0; column < ncolumns; column++){
+			if(validPixels[line][column]){
+				studyArea++;
+			}
+		}
+
   	for(int criteria = 0; criteria < ncriterias; criteria++){
 
 		Matrix matrix = data.getCriteriaMatrix(criteria);
@@ -41,6 +56,7 @@ void PrometheeVanilla::process(){
 			cerr << (100.0 * (criteria * nlines + line + 1))/(ncriterias * nlines) << "%"<< endl;
 			for(int column = 0; column < ncolumns; column++){
 				if(!validPixels[line][column]) continue;
+				
 				for(register int line2 = 0; line2 < nlines; line2++){
 					for(register int column2 = 0; column2 < ncolumns; column2++){
 						if(validPixels[line2][column2] && 
@@ -61,11 +77,12 @@ void PrometheeVanilla::process(){
 
   	}
 
+	int denominator = (this->divideBy != -1 ? this->divideBy : studyArea);
 	// applying a not standard normalization (but used by grass)
 	for(int line = 0; line < nlines; line++)
 	for(int column = 0; column < ncolumns; column++){
-		positiveFlow[line][column] /= ncriterias;
-		negativeFlow[line][column] /= ncriterias;
+		positiveFlow[line][column] /= denominator;
+		negativeFlow[line][column] /= denominator;
 	}
 
 	// calculating global flow
