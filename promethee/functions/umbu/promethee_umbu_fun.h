@@ -2,6 +2,10 @@
 
 #include "../../types.h"
 
+/**
+ * Abstract structure of a function for PrometheeUmbu
+ * */
+
 struct PrometheeUmbuFunction {
 
     vector<ldouble> params;

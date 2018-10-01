@@ -2,6 +2,9 @@
 
 #include "promethee_umbu_fun.h"
 
+/**
+ * Linear umbu function
+ * */
 struct LinearUmbuFunction : PrometheeUmbuFunction {
 
     LinearUmbuFunction(vector<ldouble> params): PrometheeUmbuFunction(params){}
