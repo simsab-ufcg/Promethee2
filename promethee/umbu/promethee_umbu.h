@@ -9,14 +9,15 @@
  * Structure of promethee umbu
  * */
 struct PrometheeUmbu : Promethee {
-    string filename;
-    double weight;
-    PrometheeUmbuFunction *function;
-    int divideBy;
-    int chunkBound;
-    bool isMax;
-    int area;
+    string filename; // name of criterion to be processed
+    double weight; // weight of criterion
+    PrometheeUmbuFunction *function; // function to be used in processing
+    int divideBy; // division constant , -1 to divide by (Area - 1)
+    int chunkBound; // max chunk size
+    bool isMax; // kind of function
+    int area; // area of criterion
 
+    // info related to criterion file
     int height, width, samplePerPixel;
 
     void init(vector<string> args, int divideBy);

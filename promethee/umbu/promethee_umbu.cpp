@@ -108,11 +108,16 @@ void PrometheeUmbu::generateChunkOutTifUnbu(string &outputFile, string &nextFile
     }
     TIFFClose(nxt);
     TIFFClose(out);
+
+    /**
+     * Output is swapped with the next file, 
+     * to keep logic of filenaming
+     * */
     swap(outputFile, nextFile);
 }
 
 /**
- * Makes division only in final, to run faster
+ * Makes division only after all the flows be defined, to run faster
  * */
 void PrometheeUmbu::divide(string &outputFile, string &nextFile, TIFF *input){
     TIFF *out = TIFFOpen(outputFile.c_str(), "rm");
@@ -149,14 +154,24 @@ void PrometheeUmbu::divide(string &outputFile, string &nextFile, TIFF *input){
  * Preprocess required data based in map
  * */
 void PrometheeUmbu::processChunk(map<double, int> & cnt, string & outputFile, string & nextFile, TIFF * input){
+    /**
+     * Get the keys of the map
+     * */
     vector<ldouble> values;
-    for(auto it : cnt) values.push_back(it.first);
+    for(auto it : cnt)
+        values.push_back(it.first);
+    /**
+     * Makes accumulated sum considering frequency of every element and its value
+     * */
     vector<ldouble> sumAcc;
     ldouble sum = 0;
     for(auto &it : cnt) {
         sum += it.first * it.second;
         sumAcc.push_back(sum);
     }
+    /**
+     * Makes accumulated sum of the frequency of the elements
+     * */
     vector<unsigned int> countAcc;
     unsigned int scnt = 0;
     for(auto &it: cnt){

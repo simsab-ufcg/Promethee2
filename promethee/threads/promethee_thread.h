@@ -6,6 +6,9 @@
 #include <algorithm>
 #include "../promethee_function_adapter.h"
 
+/**
+ * Information needed to thread
+ * */
 struct argsThread {
     Matrix* input;
     MaskMatrix* validPixels;
