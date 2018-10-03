@@ -139,7 +139,7 @@ void PrometheeUmbu::divide(string &outputFile, string &nextFile, TIFF *input){
             if(isnan(line[j])) {
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             } else {
-                outline[j] += line[j] / denominator;
+                outline[j] /= denominator;
             }
         }
 	
