@@ -29,7 +29,7 @@ int main(int argc, char* argv[]){
     TIFFGetField(tifs[0], TIFFTAG_IMAGELENGTH, &height);
     TIFFGetField(tifs[0], TIFFTAG_SAMPLESPERPIXEL, &sampleperpixel);
 
-    TIFF *out = TIFFOpen("merged.tif", "wm");
+    TIFF *out = TIFFOpen("merged.tif", "w8m");
     TIFFSetField(out, TIFFTAG_IMAGEWIDTH     , width); 
     TIFFSetField(out, TIFFTAG_IMAGELENGTH    , height);
     TIFFSetField(out, TIFFTAG_BITSPERSAMPLE  , 64);
