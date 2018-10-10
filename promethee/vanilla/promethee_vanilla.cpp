@@ -53,7 +53,6 @@ void PrometheeVanilla::process(){
 		bool isMax = data.getIsMax(criteria);
 		vector<ldouble> values;
 		for(int line = 0; line < nlines; line++){
-			cerr << (100.0 * (criteria * nlines + line + 1))/(ncriterias * nlines) << "%"<< endl;
 			for(int column = 0; column < ncolumns; column++){
 				if(!validPixels[line][column]) continue;
 				

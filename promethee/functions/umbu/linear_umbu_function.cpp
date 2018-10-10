@@ -8,44 +8,41 @@ ldouble LinearUmbuFunction::getPParameter(){
 ldouble LinearUmbuFunction::getPositiveDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
     ldouble sum = 0;
     
-    /**
-     * Keep the p parameter to have faster access
-     * */
+    
+    //  Keep the p parameter to have faster access
+     
     ldouble pParameter = this->getPParameter();
     
     {
-        /**
-         * Count the number of alternatives in interval [-Infinity, QueryValue - pParameter)
-         * QueryValue will be completely prefered than this alternatives, 
-         * each one will contribute with 1 in the positiveDelta
-         * 
-         * ptr2 = pointer the first number that is not in the interval
-         * 
-         * cnt[ptr2 - 1] = amount of alternatives in the interval
-         * 
-         * As every contributes with 1, still have to multiply be the weight
-         * */
+        
+        //   Count the number of alternatives in interval [-Infinity, QueryValue - pParameter)
+        //   QueryValue will be completely prefered than this alternatives, 
+        //   each one will contribute with 1 in the positiveDelta
+        //   ptr2 = pointer the first number that is not in the interval
+        //   cnt[ptr2 - 1] = amount of alternatives in the interval
+        //   As every contributes with 1, still have to multiply be the weight
+          
         int ptr2 = lower_bound(values.begin(), values.end(), queryValue - pParameter) - values.begin();
         ldouble value = weight * (ptr2 > 0 ? cnt[ptr2 - 1] : 0);
         sum += value;
     
-        /**
-         * Count the number of alternatives in interval [QueryValue - pParameter, QueryValue)
-         * Query value will be preferred in a linear function way,
-         * the contribution of each one is (QueryValue - x) / pParameter,
-         * the summation of every alternative in this interval will result in
-         * (QueryValue * (number of alternatives in terminal) - (summation of alternatives))/pParameter
-         * 
-         * ptr = pointer the first alternative that is not in the interval [- Infinity, QueryValue)
-         * 
-         * cnt[ptr - 1] = amount of alternatives in the interval [-Infinity, QueryValue)
-         * 
-         * cnt[ptr - 1] - cnt[ptr2 - 1] = amount of alternatives in the interval [QueryValue - pParameter, QueryValue)
-         * 
-         * The same logic is applied to cummulative to get the summation of every alternative in the interval
-         * 
-         * The cases where ptr or ptr2 have to handled, cnt[-1] = 0 
-         * */
+        
+        //   Count the number of alternatives in interval [QueryValue - pParameter, QueryValue)
+        //   Query value will be preferred in a linear function way,
+        //   the contribution of each one is (QueryValue - x) / pParameter,
+        //   the summation of every alternative in this interval will result in
+        //   (QueryValue * (number of alternatives in terminal) - (summation of alternatives))/pParameter
+        //   
+        //   ptr = pointer the first alternative that is not in the interval [- Infinity, QueryValue)
+        //   
+        //   cnt[ptr - 1] = amount of alternatives in the interval [-Infinity, QueryValue)
+        //   
+        //   cnt[ptr - 1] - cnt[ptr2 - 1] = amount of alternatives in the interval [QueryValue - pParameter, QueryValue)
+        //   
+        //   The same logic is applied to cummulative to get the summation of every alternative in the interval
+        //   
+        //   The cases where ptr or ptr2 have to handled, cnt[-1] = 0 
+          
         int ptr = lower_bound(values.begin(), values.end(), queryValue) - values.begin();
         unsigned int amount = 0;
         if(ptr > 0) amount += cnt[ptr - 1];
@@ -66,9 +63,7 @@ ldouble LinearUmbuFunction::getPositiveDelta(vector<ldouble> &values, ldouble qu
 ldouble LinearUmbuFunction::getNegativeDelta(vector<ldouble> &values, ldouble queryValue, vector<ldouble> &cummulative, ldouble weight, vector<unsigned int> &cnt){
     ldouble sum = 0;
     
-    /**
-     * Keep the p parameter to have faster access
-     * */
+    // Keep the p parameter to have faster access
     ldouble pParameter = this->getPParameter();
     
     {
