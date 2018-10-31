@@ -1,0 +1,43 @@
+#!/bin/bash
+
+nsamples=$1
+mode=$2
+in=$3
+tag=$4
+
+grass_cmd="r.mcda.promethee criteria=${in}@PERMANENT,${in}@PERMANENT weight=0.47,0.53 positiveflow=impacto+ negativeflow=impacto- --overwrite --quiet"
+
+promethee_path="/home/gabrielgomes/workspace/PrometheeOptimization/"
+promethee_cmd="${promethee_path}/run ${promethee_path}/samples/sample${in}/input ${promethee_path}/samples/sample${in1}/meta ${promethee_path}/samples/sample2/output"
+
+caja_cmd="./run"
+
+for sample in `seq 1 $nsamples`
+do
+    
+    case $mode in
+        grass)
+            #as we had problems using time command with grass, we are using date instead
+            out="${mode}/${tag}/${sample}.${RANDOM}.out"
+            python -c "import time; millis = int(round(time.time() * 1000)); print millis;" >> $out
+            ${grass_cmd}
+            python -c "import time; millis = int(round(time.time() * 1000)); print millis;" >> $out
+            ;;
+        vanilla)
+            (time ${promethee_cmd} -V) 2> "${mode}/${tag}/${sample}.${RANDOM}.out"
+            ;;
+        opt)
+            (time ${promethee_cmd}) 2> "${mode}/${tag}/${sample}.${RANDOM}.out"
+            ;;
+        caja)
+            (time ${caja_cmd}) 2> "${mode}/${tag}/${sample}.${RANDOM}.out"
+            ;;
+        umbu-caja)
+            (time ${caja_cmd}) 2> "${mode}/${tag}/${sample}.${RANDOM}.out"
+            ;;
+        *)
+            echo "Wrong args? Usage: $0 number_of_sample [grass | vanilla | opt | caja | unbu-caja] input_name"
+        ;;
+    esac
+
+done

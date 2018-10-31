@@ -1,11 +1,17 @@
 #include "parse_args.h"
 
+/**
+ * Convert array of pointers to vector of strings
+ * */
 vector<string> convertToVector(int argc, char * argv[]){
   vector<string> args;
   for(int i = 1; i < argc; i++) args.push_back(argv[i]);
   return args;
 }
 
+/**
+ * Find if there is specific flag, if there is, remove it from array
+ * */
 bool hasFlag(vector<string> & args, string flag){
   int size = args.size();
   for(int i = 0; i < size; i++){
@@ -18,6 +24,9 @@ bool hasFlag(vector<string> & args, string flag){
   return false;
 }
 
+/**
+ * Get command option value, and remove if there is command
+ * */
 string getCmdOption(vector<string> & args, string cmd){
   int size = args.size();
   cmd = cmd + "=";

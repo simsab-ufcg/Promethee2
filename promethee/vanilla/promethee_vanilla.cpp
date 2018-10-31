@@ -53,7 +53,6 @@ void PrometheeVanilla::process(){
 		bool isMax = data.getIsMax(criteria);
 		vector<ldouble> values;
 		for(int line = 0; line < nlines; line++){
-			cerr << (100.0 * (criteria * nlines + line + 1))/(ncriterias * nlines) << "%"<< endl;
 			for(int column = 0; column < ncolumns; column++){
 				if(!validPixels[line][column]) continue;
 				
@@ -77,7 +76,7 @@ void PrometheeVanilla::process(){
 
   	}
 
-	int denominator = (this->divideBy != -1 ? this->divideBy : studyArea);
+	int denominator = (this->divideBy != -1 ? this->divideBy : studyArea - 1);
 	// applying a not standard normalization (but used by grass)
 	for(int line = 0; line < nlines; line++)
 	for(int column = 0; column < ncolumns; column++){

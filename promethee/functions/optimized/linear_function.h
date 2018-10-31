@@ -3,7 +3,7 @@
     #define LINEAR_FUNCTION_INCLUDED
     
     #include "promethee_function.h"
-    
+
     struct LinearFunction : PrometheeFunction {
         ldouble pParameter;
         

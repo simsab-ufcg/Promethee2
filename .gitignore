@@ -1,5 +1,7 @@
-run
 .vscode/
 out/
 *.o
+*.tif
+*.out
 test.sh
+run 

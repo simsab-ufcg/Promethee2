@@ -15,6 +15,10 @@
   #include "functions/optimized/linear_with_indifference_function.h"
   #include <string>
 
+  /**
+   * TODO Refactor
+   * Ugly structure to make possible vanilla/optimized have the same input reader
+   * */
   struct PrometheeFunctionAdapter{
     PrometheeFunction* optFunction;
     ComparisonFunction* vanillaFunction;

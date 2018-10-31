@@ -83,7 +83,7 @@ void PrometheeOpt::process() {
     }
   }
 
-  int denominator = (this->divideBy != -1 ? this->divideBy : studyArea);
+  int denominator = (this->divideBy != -1 ? this->divideBy : studyArea - 1);
   // applying a not standard normalization (but used by grass)
   for(int line = 0; line < nlines; line++)
     for(int column = 0; column < ncolumns; column++){
