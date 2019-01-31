@@ -10,7 +10,7 @@ TIFF* openFile(string filename, int width, int height){
     TIFFSetField(file, TIFFTAG_IMAGEWIDTH     , width); 
     TIFFSetField(file, TIFFTAG_IMAGELENGTH    , height);
     TIFFSetField(file, TIFFTAG_BITSPERSAMPLE  , 64);
-    TIFFSetField(file, TIFFTAG_SAMPLEFORMAT  , 3);
+    TIFFSetField(file, TIFFTAG_SAMPLEFORMAT   , 3);
     TIFFSetField(file, TIFFTAG_COMPRESSION    , 1);
     TIFFSetField(file, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(file, TIFFTAG_ORIENTATION    , 1);

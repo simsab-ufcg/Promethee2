@@ -3,6 +3,7 @@
 #include "../promethee.h"
 #include "../functions/umbu/promethee_umbu_fun.h"
 #include "tiffio.h"
+#include "../utils.h"
 #include <map>
 
 /**
@@ -11,6 +12,7 @@
 struct PrometheeUmbu : Promethee {
     string filename; // name of criterion to be processed
     double weight; // weight of criterion
+    uint16 sampleFormat; // size of bytes
     PrometheeUmbuFunction *function; // function to be used in processing
     int divideBy; // division constant , -1 to divide by (Area - 1)
     int chunkBound; // max chunk size
