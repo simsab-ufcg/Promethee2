@@ -18,7 +18,7 @@ struct PrometheeUmbu : Promethee {
     int chunkBound; // max chunk size
     bool isMax; // kind of function
     int area; // area of criterion
-
+    int start, end; // first line and last line which will be processed
     // info related to criterion file
     int height, width, samplePerPixel;
 

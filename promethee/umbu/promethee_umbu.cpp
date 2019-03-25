@@ -34,6 +34,21 @@ void PrometheeUmbu::init(vector<string> args, int divideBy){
         cerr << "Error: incorrect arguments." << endl;
         exit(0);
     }
+
+    string start = getCmdOption(args, "-start");
+    if(!start.size()){
+        this->start = -1;
+    }else{
+        this->start = atoi(start.c_str());
+    }
+
+    string end = getCmdOption(args, "-end");
+    if(!start.size()){
+        this->end = -1;
+    }else{
+        this->end = atoi(end.c_str());
+    }
+
     this->chunkBound = atoi(chunk.c_str());
 
     this->isMax = hasFlag(args, "-ismax");
@@ -175,9 +190,14 @@ void PrometheeUmbu::process(){
     TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
     TIFFGetField(input, TIFFTAG_SAMPLESPERPIXEL, &this->samplePerPixel);
 
+    this->start = max(0, min(this->start, this->height));
+
+    this->end = min(this-> height, max(this->end, this->start));
+
     // Name of files to use during processing
-    string nextFile = "nxt." + this->filename;
-    string outputFile = "out." + this->filename;
+    string interval = to_string(start) + "-" + to_string(end);
+    string nextFile = "nxt." + interval + this->filename;
+    string outputFile = "out." + interval + this->filename;
 
     // Create output file
     setupOutput(outputFile, this->width, this->height);
@@ -193,7 +213,7 @@ void PrometheeUmbu::process(){
     map<double, int> cnt;
     int idChunk = 0;
     this->area = 0;
-    for(int i = 0; i < height; i++){
+    for(int i = this->start; i < this->end; i++){
         // Read line of input and add to map and area
         TIFFReadScanline(input, line, i);
         for(int j = 0; j < width; j++){
