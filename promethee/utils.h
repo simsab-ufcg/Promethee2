@@ -3,6 +3,7 @@
 #include "types.h"
 #include <iostream>
 #include <string.h>
+#include <math.h>
 
 struct PixelReader{
 	uint16 sampleFormat;

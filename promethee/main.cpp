@@ -1,6 +1,7 @@
 #include "optimized/promethee_opt.h"
 #include "vanilla/promethee_vanilla.h"
 #include "umbu/promethee_umbu.h"
+#include "fast/promethee_fast.h"
 #include "threads/promethee_thread.h"
 #include "parse_args.h"
 
@@ -13,7 +14,8 @@ int main(int argc, char *argv[]){
   bool isVan = hasFlag(args, "-van");
   bool isUmbu = hasFlag(args, "-um");
   bool isThread = hasFlag(args, "-thr");
-  bool isOpt = !isVan && !isUmbu && !isThread;
+  bool isFast = hasFlag(args, "-fp");
+  bool isOpt = !isVan && !isUmbu && !isThread && !isFast;
   
   string hq_flag = getCmdOption(args, "-hq");
   int divideBy = -1;
@@ -23,7 +25,9 @@ int main(int argc, char *argv[]){
   }
 
   Promethee* res;
-  if(isOpt)
+  if(isFast)
+    res = new PrometheeFast();
+  else if(isOpt)
     res = new PrometheeOpt();
   else if(isVan)
     res = new PrometheeVanilla();

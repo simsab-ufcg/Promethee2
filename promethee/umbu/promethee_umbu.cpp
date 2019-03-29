@@ -4,7 +4,6 @@
 #include <iostream>
 #include "../functions/umbu/linear_umbu_function.h"
 #include "../functions/umbu/linear_with_indifference_umbu_function.h"
-#include "tiffio.h"
 #include "../plibtiff.h"
 #include <map>
 #include <cmath>
@@ -43,8 +42,8 @@ void PrometheeUmbu::init(vector<string> args, int divideBy){
     }
 
     string end = getCmdOption(args, "-end");
-    if(!start.size()){
-        this->end = -1;
+    if(!end.size()){
+        this->end = 1e9;
     }else{
         this->end = atoi(end.c_str());
     }
@@ -192,10 +191,10 @@ void PrometheeUmbu::process(){
 
     this->start = max(0, min(this->start, this->height));
 
-    this->end = min(this-> height, max(this->end, this->start));
+    this->end = max(this->start, min(this->end, this->height));
 
     // Name of files to use during processing
-    string interval = to_string(start) + "-" + to_string(end);
+    string interval = to_string(this->start) + "-" + to_string(this->end);
     string nextFile = "nxt." + interval + this->filename;
     string outputFile = "out." + interval + this->filename;
 
