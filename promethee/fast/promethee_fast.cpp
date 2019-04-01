@@ -230,14 +230,14 @@ void PrometheeFast::process() {
 			}
 			
 			// After update all pointer, time to calculate flow
-			ldouble plusFlow = ((beginLine * this->width) + (beginColunm));
-			plusFlow += ((totalSumMinus - (this->q * (ldouble)qtdMinus)) / ((ldouble)this->p - this->q)); 
+			ldouble plusFlow = ((minusPPointer * this->width) + (beginColunm));
+			plusFlow += ((abs(totalSumMinus - (qtdMinus * bufferInput[j])) - (this->q * (ldouble)qtdMinus)) / ((ldouble)this->p - this->q)); 
 			
-			ldouble minusFlow = (this->height - lastLine) * (this->width) - (lastColunm + (lastLine != this->height));
-			minusFlow += ((totalSumPlus - (this->q * (ldouble)qtdPlus)) / ((ldouble)this->p - this->q));
+			ldouble minusFlow = (this->height - plusPPointer) * (this->width) - (lastColunm + (plusPPointer != this->height));
+			minusFlow += ((abs(totalSumPlus - (qtdPlus * bufferInput[j])) - (this->q * (ldouble)qtdPlus)) / ((ldouble)this->p - this->q));
 
 			
-			output_line[j] = ((plusFlow - minusFlow) * this->weight * (this->isMax ? 1 : -1)) / ((this->height * this->width) - 1);
+			output_line[j] = ((plusFlow - minusFlow) * this->weight * (this->isMax ? 1.0 : -1.0)) / ((this->height * this->width) - 1.0);
 		}
 		TIFFWriteScanline(output, output_line, i - this->start);
 	}

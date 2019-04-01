@@ -198,9 +198,9 @@ void PrometheeUmbu::process(){
     string nextFile = "nxt." + interval + this->filename;
     string outputFile = "out." + interval + this->filename;
 
+
     // Create output file
     setupOutput(outputFile, this->width, this->height);
-
 
     // Create PixelReader Interface
     unsigned short byte_size = TIFFScanlineSize(input) / this->width;
