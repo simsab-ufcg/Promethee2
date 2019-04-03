@@ -109,8 +109,13 @@
      tdata_t line = _TIFFmalloc((sizeof (ldouble)) * this->width);
      PixelReader pr = PixelReader(this->sampleFormat, sizeof (ldouble), line);
 
-     ldouble bufferV[paths.size()][this->width];
-     ldouble bufferP[paths.size()][this->width];
+     ldouble *bufferV[paths.size()];
+     ldouble *bufferP[paths.size()];
+
+     for(int i = 0; i < paths.size(); i++){
+         bufferV[i] = (ldouble*)malloc(sizeof (ldouble) * this->width);
+         bufferP[i] = (ldouble*)malloc(sizeof (ldouble) * this->width);
+     }
 
      typedef pair < pair <ldouble, ldouble >, int > reduct;
 
@@ -168,6 +173,11 @@
              }else pointersX[i] = this->width;
          }
         
+     }
+
+     for(int i = 0; i < paths.size(); i++){
+         free(bufferV[i]);
+         free(bufferP[i]);
      }
  }
 
