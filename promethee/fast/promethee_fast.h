@@ -4,6 +4,7 @@
 #include "tiffio.h"
 #include "../utils.h"
 #include <map>
+#include "../external_sort.h"
 
 /**
  * Structure of promethee fast
@@ -19,6 +20,8 @@ struct PrometheeFast : Promethee {
     bool isMax; // kind of function
     int start, end; // first line and last line which will be processed
     double p, q; // Arguments of promethee function
+    ExternalSort es;
+
 
     // info related to criterion file
     int height, width, samplePerPixel;

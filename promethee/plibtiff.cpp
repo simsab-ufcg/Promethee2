@@ -15,7 +15,7 @@ TIFF* openFile(string filename, int width, int height){
     TIFFSetField(file, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(file, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(file, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(file, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(file, TIFFTAG_ROWSPERSTRIP   , 8);
     TIFFSetField(file, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(file, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(file, TIFFTAG_YRESOLUTION    , 1);

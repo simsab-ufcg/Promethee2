@@ -29,6 +29,12 @@ void PrometheeFast::init(vector<string> args, int divideBy){
   	for(int i = 2; i < args.size(); i++)
       params.push_back(atof(args[i].c_str()));
 
+	string chunkSize = getCmdOption(args, "-size");
+	if(!chunkSize.size()){
+		cerr << "Arguments is missing!" << endl;
+		exit(1);
+	}
+
 	string start = getCmdOption(args, "-start");
 	if(!start.size()){
 		this->start = -1;
@@ -49,6 +55,10 @@ void PrometheeFast::init(vector<string> args, int divideBy){
     this->p = params[0];
     this->q = params[1];
   }
+
+	this->es = ExternalSort(this->filename, atoi(chunkSize.c_str()) * 512 * 1024);
+
+	es.sort();
 
 }
 
@@ -243,4 +253,7 @@ void PrometheeFast::process() {
 	}
 	TIFFClose(output);
 	TIFFClose(input);
+
+	es.path = "out." + interval + "." + this->filename;
+	es.reverse();
 }
