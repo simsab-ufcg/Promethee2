@@ -91,8 +91,8 @@
      TIFFClose(this->input);
      TIFFClose(this->output);
 
-     this->output = openFile(this->positions, this->width, this->height);
      this->input = openFile(this->path, this->width, this->height);
+     this->output = openFile(this->positions, this->width, this->height);
 
      this->k_wayMergesort(buckets);
 
@@ -102,30 +102,29 @@
 
 
  void ExternalSort::k_wayMergesort(vector < pair < string, string> > paths){
-     this->bucketAmount = paths.size();
      
-     TIFF *values[this->bucketAmount];
-     TIFF *positions[this->bucketAmount];
+     TIFF *values[paths.size()];
+     TIFF *positions[paths.size()];
      
      tdata_t line = _TIFFmalloc((sizeof (ldouble)) * this->width);
      PixelReader pr = PixelReader(this->sampleFormat, sizeof (ldouble), line);
 
-     ldouble bufferV[this->bucketAmount][this->width];
-     ldouble bufferP[this->bucketAmount][this->width];
+     ldouble bufferV[paths.size()][this->width];
+     ldouble bufferP[paths.size()][this->width];
 
      typedef pair < pair <ldouble, ldouble >, int > reduct;
 
      priority_queue <reduct, vector<reduct>, greater<reduct> > pq;
 
-     int pointersX[this->bucketAmount], pointersY[this->bucketAmount];
-     int size[this->bucketAmount];
+     int pointersX[paths.size()], pointersY[paths.size()];
+     int size[paths.size()];
 
      ldouble orderData[this->width];
      ldouble orderPosition[this->width];
      int posX = 0;
      int posY = 0;
 
-     for(int i = 0; i < this->bucketAmount; i++){
+     for(int i = 0; i < paths.size(); i++){
          values[i] = TIFFOpen(paths[i].first.c_str(), "rm");
          positions[i] = TIFFOpen(paths[i].second.c_str(), "rm");
          pointersX[i] = 0;
@@ -170,8 +169,6 @@
          }
         
      }
-
-
  }
 
  pair < string, string> ExternalSort::parcialSort(int start, int end){
