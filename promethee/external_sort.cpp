@@ -174,7 +174,6 @@
          }
         
      }
-
      for(int i = 0; i < paths.size(); i++){
          free(bufferV[i]);
          free(bufferP[i]);
