@@ -30,8 +30,9 @@ void PrometheeUmbu::init(vector<string> args, int divideBy){
     // Get size of chunk
     string chunk = getCmdOption(args, "-chunk");
     if(!chunk.size()){
-        cerr << "Error: incorrect arguments." << endl;
-        exit(0);
+        this->chunkBound = 100000000;
+    }else{
+        this->chunkBound = atoi(chunk.c_str());
     }
 
     string start = getCmdOption(args, "-start");
@@ -47,8 +48,6 @@ void PrometheeUmbu::init(vector<string> args, int divideBy){
     }else{
         this->end = atoi(end.c_str());
     }
-
-    this->chunkBound = atoi(chunk.c_str());
 
     this->isMax = hasFlag(args, "-ismax");
 
@@ -189,6 +188,16 @@ void PrometheeUmbu::process(){
     TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
     TIFFGetField(input, TIFFTAG_SAMPLESPERPIXEL, &this->samplePerPixel);
 
+    // Create PixelReader Interface
+    unsigned short byte_size = TIFFScanlineSize(input) / this->width;
+    tdata_t line = _TIFFmalloc(TIFFScanlineSize(input));
+    PixelReader pr = PixelReader(this->sampleFormat, byte_size, line);
+
+    if(TIFFReadScanline(input, line, 0) < 0){
+        std::cerr << "Tiled or corrupted image." << std::endl;
+        exit(1);
+    }
+
     this->start = max(0, min(this->start, this->height));
 
     this->end = max(this->start, min(this->end, this->height));
@@ -201,12 +210,6 @@ void PrometheeUmbu::process(){
 
     // Create output file
     setupOutput(outputFile, this->width, this->height);
-
-    // Create PixelReader Interface
-    unsigned short byte_size = TIFFScanlineSize(input) / this->width;
-    tdata_t line = _TIFFmalloc(TIFFScanlineSize(input));
-    PixelReader pr = PixelReader(this->sampleFormat, byte_size, line);
-
 
     // To contabilize distinct values
     map<double, int> cnt;
