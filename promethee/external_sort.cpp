@@ -102,16 +102,21 @@
 
 
  void ExternalSort::k_wayMergesort(vector < pair < string, string> > paths){
-     
+
+     std::cout << "instance tiff pointer" << endl;     
      TIFF *values[paths.size()];
      TIFF *positions[paths.size()];
      
+
+     std::cout << "create pixel reader" << endl;
      tdata_t line = _TIFFmalloc((sizeof (ldouble)) * this->width);
      PixelReader pr = PixelReader(this->sampleFormat, sizeof (ldouble), line);
 
+     std::cout << "creating buffer pointers" << endl;
      ldouble *bufferV[paths.size()];
      ldouble *bufferP[paths.size()];
 
+     std::cout << "allocating buffer pointers" << endl;
      for(int i = 0; i < paths.size(); i++){
          bufferV[i] = (ldouble*)malloc(sizeof (ldouble) * this->width);
          bufferP[i] = (ldouble*)malloc(sizeof (ldouble) * this->width);
@@ -119,6 +124,7 @@
 
      typedef pair < pair <ldouble, ldouble >, int > reduct;
 
+     std::cout << "Start process" << endl;
      priority_queue <reduct, vector<reduct>, greater<reduct> > pq;
 
      int pointersX[paths.size()], pointersY[paths.size()];
@@ -129,6 +135,7 @@
      int posX = 0;
      int posY = 0;
 
+     std::cout << "Initializing values" << endl;
      for(int i = 0; i < paths.size(); i++){
          values[i] = TIFFOpen(paths[i].first.c_str(), "rm");
          positions[i] = TIFFOpen(paths[i].second.c_str(), "rm");
@@ -145,6 +152,7 @@
          pointersX[i]++;
      }
      
+     std::cout << "K-way merge start" << endl;
      while(!pq.empty()){
 
          reduct curr = pq.top();
@@ -174,6 +182,8 @@
          }
         
      }
+
+     std::cout << "Free all" << endl;
      for(int i = 0; i < paths.size(); i++){
          free(bufferV[i]);
          free(bufferP[i]);
