@@ -184,10 +184,11 @@
      }
 
      std::cout << "Free all" << endl;
-     for(int i = 0; i < paths.size(); i++){
+     for(int i = paths.size() - 1; i >= 0; i--){
          free(bufferV[i]);
          free(bufferP[i]);
      }
+     std::cout << "Done" << endl;
  }
 
  pair < string, string> ExternalSort::parcialSort(int start, int end){
