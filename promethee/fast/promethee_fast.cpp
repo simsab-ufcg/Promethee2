@@ -59,7 +59,7 @@ void PrometheeFast::init(vector<string> args, int divideBy){
 	this->es = ExternalSort(this->filename, atoi(chunkSize.c_str()) * 512 * 1024);
 
 	es.sort();
-
+	std::cout << "End of Promethee Initialization" << std::endl;
 }
 
 void PrometheeFast::findFirst(PixelReader &pr, int &beginLine, int &beginColunm, ldouble const& firstValue){
@@ -124,7 +124,7 @@ void PrometheeFast::process() {
 	TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
 	TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
 	TIFFGetField(input, TIFFTAG_SAMPLESPERPIXEL, &this->samplePerPixel);
-
+	std::cout << "Open file" << std::endl;
 	// Define correct start/end
 	this->start = max(0, min(this->start, this->height));
   this->end = max(this->start, min(this->end, this->height));
@@ -174,6 +174,7 @@ void PrometheeFast::process() {
 	fillBuffer(bufferPlusQ, pr, plusQPointer);
 	fillBuffer(bufferPlusP, pr, plusPPointer);
 
+	std::cout << "Prepare to run" << std::endl;
 	// Start 4-pointer strategy
 	for(int i = this->start; i < this->end; i++){
 		fillBuffer(bufferInput, pr, i);
@@ -251,6 +252,9 @@ void PrometheeFast::process() {
 		}
 		TIFFWriteScanline(output, output_line, i - this->start);
 	}
+
+	std::cout << "Done promethee" << std::endl;	
+
 	TIFFClose(output);
 	TIFFClose(input);
 

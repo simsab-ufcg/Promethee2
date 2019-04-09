@@ -74,9 +74,10 @@
     this->output = openFile(this->positions, this->width, this->height);
 
     this->k_wayMergesort(buckets);
-
+    std::cout << "End k_wayMergeSort" << std::endl;
     TIFFClose(this->input);
     TIFFClose(this->output);
+    std::cout << "Saved files" << std::endl;
  }
 
  string ExternalSort::reverse(){
@@ -187,6 +188,8 @@
      for(int i = paths.size() - 1; i >= 0; i--){
          free(bufferV[i]);
          free(bufferP[i]);
+	 TIFFClose(values[i]);
+         TIFFClose(positions[i]);
      }
      std::cout << "Done" << endl;
  }
