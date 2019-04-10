@@ -18,8 +18,8 @@ struct ExternalSort {
     ExternalSort();
     ExternalSort(string path, int megaBytes);
 
-    string sort();
-    string reverse();
+    void sort();
+    void reverse();
 
 
 private: 

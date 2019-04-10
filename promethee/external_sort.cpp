@@ -19,7 +19,7 @@
 		buffer[i] = pr.readPixel(i);
  }
 
- string ExternalSort::sort(){
+ void ExternalSort::sort(){
 
     this->input = TIFFOpen(this->path.c_str(), "rm");
     TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
@@ -37,7 +37,7 @@
     TIFFSetField(this->output, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(this->output, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(this->output, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , 8);
+    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , 1);
     TIFFSetField(this->output, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(this->output, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(this->output, TIFFTAG_YRESOLUTION    , 1);
@@ -55,6 +55,7 @@
     }
 
     TIFFClose(this->output);
+
     this->output = TIFFOpen(this->positions.c_str(), "rm");
 
     long long sizeInput = TIFFScanlineSize(this->input) * ((long long)this->height);
@@ -70,8 +71,35 @@
     TIFFClose(this->input);
     TIFFClose(this->output);
 
-    this->input = openFile(this->path, this->width, this->height);
-    this->output = openFile(this->positions, this->width, this->height);
+     this->input = TIFFOpen(this->path.c_str(), "w8m");
+    TIFFSetField(this->input, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(this->input, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(this->input, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(this->input, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(this->input, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(this->input, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(this->input, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(this->input, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(this->input, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(this->input, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(this->input, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(this->input, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(this->input, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
+
+     this->output = TIFFOpen(this->positions.c_str(), "w8m");
+    TIFFSetField(this->output, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(this->output, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(this->output, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(this->output, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(this->output, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(this->output, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(this->output, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(this->output, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(this->output, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(this->output, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(this->output, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(this->output, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
     this->k_wayMergesort(buckets);
     std::cout << "End k_wayMergeSort" << std::endl;
@@ -80,7 +108,7 @@
     std::cout << "Saved files" << std::endl;
  }
 
- string ExternalSort::reverse(){
+ void ExternalSort::reverse(){
      this->input = TIFFOpen(this->positions.c_str(), "rm");
      this->output = TIFFOpen(this->path.c_str(), "rm");
      vector < pair < string, string> > buckets;
@@ -92,13 +120,42 @@
      TIFFClose(this->input);
      TIFFClose(this->output);
 
-     this->input = openFile(this->path, this->width, this->height);
-     this->output = openFile(this->positions, this->width, this->height);
+     this->input = TIFFOpen(this->positions.c_str(), "w8m");
+    TIFFSetField(this->input, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(this->input, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(this->input, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(this->input, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(this->input, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(this->input, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(this->input, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(this->input, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(this->input, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(this->input, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(this->input, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(this->input, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(this->input, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
+
+     this->output = TIFFOpen(this->path.c_str(), "w8m");
+    TIFFSetField(this->output, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(this->output, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(this->output, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(this->output, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(this->output, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(this->output, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(this->output, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(this->output, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(this->output, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(this->output, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(this->output, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(this->output, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
+
 
      this->k_wayMergesort(buckets);
-
+     std::cout << "End Reverse K_way" << std::endl;
      TIFFClose(this->input);
      TIFFClose(this->output);
+     std::cout << "End Reverse" << std::endl;
  }
 
 
@@ -188,7 +245,7 @@
      for(int i = paths.size() - 1; i >= 0; i--){
          free(bufferV[i]);
          free(bufferP[i]);
-	 TIFFClose(values[i]);
+	     TIFFClose(values[i]);
          TIFFClose(positions[i]);
      }
      std::cout << "Done" << endl;
@@ -228,7 +285,7 @@
     TIFFSetField(values, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(values, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(values, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(values, TIFFTAG_ROWSPERSTRIP   , 8);
+    TIFFSetField(values, TIFFTAG_ROWSPERSTRIP   , 1);
     TIFFSetField(values, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(values, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(values, TIFFTAG_YRESOLUTION    , 1);
@@ -243,11 +300,11 @@
     TIFFSetField(positions, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(positions, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(positions, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(positions, TIFFTAG_ROWSPERSTRIP   , 8);
+    TIFFSetField(positions, TIFFTAG_ROWSPERSTRIP   , 1);
     TIFFSetField(positions, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(positions, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(positions, TIFFTAG_YRESOLUTION    , 1);
-    TIFFSetField(positions, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );;
+    TIFFSetField(positions, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
     long long pos = 0;
 

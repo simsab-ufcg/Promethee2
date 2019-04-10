@@ -24,10 +24,6 @@ void PrometheeFast::init(vector<string> args, int divideBy){
 
   // args[1] is the weight
   this->weight = atof(args[1].c_str());
-  // the remaining args are function args
-  vector<ldouble> params;
-  	for(int i = 2; i < args.size(); i++)
-      params.push_back(atof(args[i].c_str()));
 
 	string chunkSize = getCmdOption(args, "-size");
 	if(!chunkSize.size()){
@@ -48,6 +44,12 @@ void PrometheeFast::init(vector<string> args, int divideBy){
 	}else{
 		this->end = atoi(end.c_str());
 	}
+
+  // the remaining args are function args
+  vector<ldouble> params;
+  	for(int i = 2; i < args.size(); i++)
+      params.push_back(atof(args[i].c_str()));
+
   if(type == "linear"){
     this->p = params[0];
     this->q = 0;
@@ -150,10 +152,22 @@ void PrometheeFast::process() {
 	int qtdMinus = 0;
 	int qtdPlus = 0;
 
-
 	// Setup output files
 	string interval = to_string(this->start) + "-" + to_string(this->end);
-	TIFF *output = openFile("out." + interval + "." + this->filename, this->width, this->end - this->start);
+	TIFF *output = TIFFOpen(("out." + interval + "." + this->filename).c_str(), "w8m");
+    TIFFSetField(output, TIFFTAG_IMAGEWIDTH     , this->width); 
+    TIFFSetField(output, TIFFTAG_IMAGELENGTH    , end - start);
+    TIFFSetField(output, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(output, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(output, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(output, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(output, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(output, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(output, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(output, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(output, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(output, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(output, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
 	// Pointer to buffers
 	int minusQPointer = begin2Line;
@@ -246,8 +260,7 @@ void PrometheeFast::process() {
 			
 			ldouble minusFlow = (this->height - plusPPointer) * (this->width) - (lastColunm + (plusPPointer != this->height));
 			minusFlow += ((abs(totalSumPlus - (qtdPlus * bufferInput[j])) - (this->q * (ldouble)qtdPlus)) / ((ldouble)this->p - this->q));
-
-			
+ 
 			output_line[j] = ((plusFlow - minusFlow) * this->weight * (this->isMax ? 1.0 : -1.0)) / ((this->height * this->width) - 1.0);
 		}
 		TIFFWriteScanline(output, output_line, i - this->start);
@@ -257,7 +270,6 @@ void PrometheeFast::process() {
 
 	TIFFClose(output);
 	TIFFClose(input);
-
 	es.path = "out." + interval + "." + this->filename;
 	es.reverse();
 }
