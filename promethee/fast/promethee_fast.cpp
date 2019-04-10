@@ -58,7 +58,7 @@ void PrometheeFast::init(vector<string> args, int divideBy){
     this->q = params[1];
   }
 
-	this->es = ExternalSort(this->filename, atoi(chunkSize.c_str()) * 512 * 1024);
+	this->es = ExternalSort(this->filename, atoi(chunkSize.c_str()) * 512LL * 1024LL);
 
 	es.sort();
 	std::cout << "End of Promethee Initialization" << std::endl;

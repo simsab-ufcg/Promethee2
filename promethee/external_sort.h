@@ -16,7 +16,7 @@ struct ExternalSort {
     int width, height, sampleFormat;
 
     ExternalSort();
-    ExternalSort(string path, int megaBytes);
+    ExternalSort(string path, long long megaBytes);
 
     void sort();
     void reverse();

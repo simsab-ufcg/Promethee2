@@ -6,7 +6,7 @@
  }
 
 
- ExternalSort::ExternalSort(string path, int megaBytes){
+ ExternalSort::ExternalSort(string path, long long megaBytes){
     this->path = path;
     this->megaBytes = megaBytes;
     this->positions = "";
