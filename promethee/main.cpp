@@ -4,6 +4,7 @@
 #include "fast/promethee_fast.h"
 #include "threads/promethee_thread.h"
 #include "parse_args.h"
+#include "external_sort.h"
 
 using namespace std;
 
@@ -15,7 +16,8 @@ int main(int argc, char *argv[]){
   bool isUmbu = hasFlag(args, "-um");
   bool isThread = hasFlag(args, "-thr");
   bool isFast = hasFlag(args, "-fp");
-  bool isOpt = !isVan && !isUmbu && !isThread && !isFast;
+  bool isSort = hasFlag(args, "-sort");
+  bool isOpt = !isVan && !isUmbu && !isThread && !isFast && !isSort;
   
   string hq_flag = getCmdOption(args, "-hq");
   int divideBy = -1;
@@ -35,6 +37,11 @@ int main(int argc, char *argv[]){
     res = new PrometheeUmbu();
   else if(isThread)
     res = new PrometheeThread();
+  else if(isSort){
+    ExternalSort es;
+    es.main(args);
+    return 0;
+  }
 
   res->init(args, divideBy);
   res->process();

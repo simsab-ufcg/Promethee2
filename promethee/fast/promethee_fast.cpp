@@ -57,10 +57,6 @@ void PrometheeFast::init(vector<string> args, int divideBy){
     this->p = params[0];
     this->q = params[1];
   }
-
-	this->es = ExternalSort(this->filename, atoi(chunkSize.c_str()) * 512LL * 1024LL);
-
-	es.sort();
 	std::cout << "End of Promethee Initialization" << std::endl;
 }
 
@@ -270,6 +266,4 @@ void PrometheeFast::process() {
 
 	TIFFClose(output);
 	TIFFClose(input);
-	es.path = "out." + interval + "." + this->filename;
-	es.reverse();
 }
