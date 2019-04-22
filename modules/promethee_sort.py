@@ -40,5 +40,5 @@ def main(argument):
     a = ' '.join(['./run', '-sort', argument[1], 'positions.tif', '-kway '])
     b = ' '.join(partialPaths)
     os.system(a + b)
-    for path in partialPaths:
-        os.system(' '.join(['rm', path]))
+   # for path in partialPaths:
+   #     os.system(' '.join(['rm', path]))

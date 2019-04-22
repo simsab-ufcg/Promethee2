@@ -3,6 +3,7 @@ out/
 *.o
 *.tif
 *.out
+*.pyc
 test.sh
 run
 arguments 

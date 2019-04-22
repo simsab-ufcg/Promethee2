@@ -16,3 +16,5 @@ struct PixelReader{
 	ldouble readPixel(uint32 colunm);
 
 };
+
+void logger(string description);

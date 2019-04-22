@@ -6,11 +6,11 @@ rm monitor/procs
 ./monitor/collect-disk-usage.sh >monitor/disk-usage &
 ./monitor/collect-memory-usage.sh >monitor/memory-usage &
 
-cd src
+cd ../../
 
-./run
+python main.py -sort random.tif -size=1024 -threads=4
 
-cd ..
+cd -
 
 ps -ef | grep ./collect | awk '{print $2}' | xargs -n 1 -P 4 kill -9
 

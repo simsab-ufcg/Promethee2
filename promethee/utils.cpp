@@ -1,5 +1,11 @@
 #include "utils.h"
 
+void logger(string description){
+    timespec res;
+    clock_gettime(CLOCK_REALTIME, &res);
+    cout << res.tv_sec << " " << description.c_str() << " " << getpid() << endl;
+}
+
 PixelReader::PixelReader() {
 	sampleFormat = 0;
 	byteSize = 0;
