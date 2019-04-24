@@ -2,8 +2,9 @@
 
 #include "types.h"
 #include <iostream>
+#include <string>
+#include <cmath>
 #include <string.h>
-#include <math.h>
 #include <unistd.h>
 #include <sys/types.h>
 

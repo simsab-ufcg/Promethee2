@@ -1,5 +1,5 @@
 #include "data.h"
-#include <math.h>
+#include <cmath>
 
 void Data::addCriteria(Matrix matrix, MatrixMetaData meta){
   matrices.push_back(matrix);
