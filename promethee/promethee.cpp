@@ -4,7 +4,7 @@ Promethee::Promethee(){
 
 }
 
-void Promethee::init(vector<string> args, int divideBy){
+void Promethee::init(std::vector<std::string> args, int divideBy){
     
 }
 

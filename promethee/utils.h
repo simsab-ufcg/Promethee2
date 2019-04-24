@@ -19,4 +19,5 @@ struct PixelReader{
 
 };
 
+bool isNaN(ldouble x);
 void logger(string description);

@@ -6,6 +6,10 @@ void logger(string description){
     cout << res.tv_sec << " " << description.c_str() << " " << getpid() << endl;
 }
 
+bool isNaN(ldouble x){
+	return x != x;
+}
+
 PixelReader::PixelReader() {
 	sampleFormat = 0;
 	byteSize = 0;

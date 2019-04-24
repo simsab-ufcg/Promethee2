@@ -5,7 +5,8 @@
   #include "types.h"
   #include "matrix_meta_data.h"
   #include "promethee_function_adapter.h"
-  
+  #include "utils.h"
+
   struct Data{
   
     vector<Matrix> matrices;

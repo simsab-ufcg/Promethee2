@@ -100,7 +100,7 @@
     TIFFSetField(this->input, TIFFTAG_YRESOLUTION    , 1);
     TIFFSetField(this->input, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
-     this->output = TIFFOpen(this->positions.c_str(), "w8m");
+    this->output = TIFFOpen(this->positions.c_str(), "w8m");
     TIFFSetField(this->output, TIFFTAG_IMAGEWIDTH     , width); 
     TIFFSetField(this->output, TIFFTAG_IMAGELENGTH    , height);
     TIFFSetField(this->output, TIFFTAG_BITSPERSAMPLE  , 64);

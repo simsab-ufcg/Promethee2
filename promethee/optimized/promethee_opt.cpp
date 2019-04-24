@@ -63,7 +63,7 @@ void PrometheeOpt::process() {
     TIFFReadScanline(input, line, i);
     for(int j = 0; j < this->width; j++) {
       double aux = pr.readPixel(j);
-      if(!isnan(aux)) {
+      if(!isNaN(aux)) {
         values.push_back(aux);
       }
     }
@@ -82,7 +82,7 @@ void PrometheeOpt::process() {
   for(int i = 0; i < this->height; i++){
     TIFFReadScanline(input, line, i);
     for(int j = 0; j < this->width; j++){
-      if(!isnan(pr.readPixel(j))){
+      if(!isNaN(pr.readPixel(j))){
 
         if(this->isMax){
           netFlow[i][j] += (*this->function).getPositiveDelta(values, pr.readPixel(j), cummulative, this->weight);

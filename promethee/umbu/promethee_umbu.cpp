@@ -94,7 +94,7 @@ void PrometheeUmbu::generateChunkOutTifUnbu(string &outputFile, string &nextFile
         TIFFReadScanline(input, line, i);
         TIFFReadScanline(out, outline, i);
         for (int j = 0; j < this->width; j++) {
-            if(isnan(pr.readPixel(j))) {
+            if(isNaN(pr.readPixel(j))) {
                 // Write nan to correspond with input
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             } else{
@@ -137,7 +137,7 @@ void PrometheeUmbu::divide(string &outputFile, string &nextFile, TIFF *input){
         TIFFReadScanline(input, line, i);
         TIFFReadScanline(out, outline, i);
         for (int j = 0; j < this->width; j++) {
-            if(isnan(pr.readPixel(j))) {
+            if(isNaN(pr.readPixel(j))) {
                 outline[j] += -sqrt(-1.0); // ?? this should be nan
             } else {
                 outline[j] /= denominator;
@@ -219,7 +219,7 @@ void PrometheeUmbu::process(){
         // Read line of input and add to map and area
         TIFFReadScanline(input, line, i);
         for(int j = 0; j < width; j++){
-            if(!isnan(pr.readPixel(j))){
+            if(!isNaN(pr.readPixel(j))){
                 cnt[pr.readPixel(j)]++;
                 this->area++;
             }

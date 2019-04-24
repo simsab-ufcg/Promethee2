@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <string>
+
 using namespace std;
 
 /**
@@ -12,8 +13,8 @@ struct Promethee{
     /**
      * Input and output related data
      * */
-    string pathToOutput;
-    vector<string> inputFiles, metaFiles;
+    std::string pathToOutput;
+    std::vector<std::string> inputFiles, metaFiles;
 
     int divideBy;
 
@@ -22,7 +23,7 @@ struct Promethee{
     /**
      * Setup the promethee knowing the args
      * */
-    virtual void init(vector<string> args, int divideBy) ;
+    virtual void init(std::vector<std::string> args, int divideBy) ;
 
     /**
      * Calculate the flow
