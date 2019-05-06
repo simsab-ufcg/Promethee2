@@ -3,7 +3,7 @@
 void logger(string description){
     timespec res;
     clock_gettime(CLOCK_REALTIME, &res);
-    cout << res.tv_sec << " " << description.c_str() << " " << getpid() << endl;
+    cout << res.tv_sec  << res.tv_nsec << " " << description.c_str() << " " << getpid() << endl;
 }
 
 bool isNaN(ldouble x){

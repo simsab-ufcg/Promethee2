@@ -28,5 +28,5 @@ private:
 
     void k_wayMergesort(vector < pair < string, string> > paths);
     pair < string, string> parcialSort(int start, int end);
-    void fillBuffer(TIFF *dataset, ldouble buffer[], PixelReader &pr, int line);
+    void fillBuffer(TIFF *dataset, ldouble buffer[], PixelReader &pr, int line, int &size);
 };
