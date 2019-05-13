@@ -15,13 +15,13 @@ def sort(argument):
             byte = byte * 512 * 1024
             total_buckets = (width * height * 8) / byte
             bucket_size = height / total_buckets
-        if '-threads=' in option:
+        if '-proc=' in option:
             threads = int(option[9:])
 
     if bucket_size == 0:
         print 'Size of sort invalid.'
         return 1
-    
+    bucket_size /= threads
     start = 0
     xargs_argument = open('arguments', 'w')
     
@@ -55,13 +55,13 @@ def unsort(argument):
             byte = byte * 512 * 1024
             total_buckets = (width * height * 8) / byte
             bucket_size = height / total_buckets
-        if '-threads=' in option:
+        if '-proc=' in option:
             threads = int(option[9:])
-
+            
     if bucket_size == 0:
         print 'Size of sort invalid.'
         return 1
-    
+    bucket_size /= threads
     start = 0
     xargs_argument = open('arguments', 'w')
     
