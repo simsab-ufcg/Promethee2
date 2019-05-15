@@ -24,4 +24,7 @@ def main():
 
 
 if __name__ == '__main__':
+    exists = os.path.isfile('run')
+    if not exists:
+        os.system("make")
     main()
