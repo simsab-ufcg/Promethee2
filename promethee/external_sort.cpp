@@ -89,7 +89,6 @@
     TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
     this->output = TIFFOpen(this->path.c_str(), "rm");
     vector< pair < ldouble, ldouble > > segment;
-    
     { // main memory economy
         unsigned short byte_size = TIFFScanlineSize(this->input) / this->width;
         tdata_t line = _TIFFmalloc(TIFFScanlineSize(this->input));
@@ -98,10 +97,11 @@
         ldouble bufferNumber[this->width];
         ldouble firstValue = this->start * this->width;
         int size = 1;
+        int s2 = 1;
 
         for(int i = this->start; i < this->end; i++){
             fillBuffer(this->input, bufferValue, pr, i, size);
-            fillBuffer(this->output, bufferValue, pr, i, size);
+            fillBuffer(this->output, bufferNumber, pr, i, s2);
             for(int j = 0; j < this->width; j++){ 
                 segment.push_back( {bufferValue[j], bufferNumber[j]} );
             }

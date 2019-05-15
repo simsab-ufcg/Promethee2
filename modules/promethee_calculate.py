@@ -11,9 +11,9 @@ def hasFlag(args, key):
 
 def calculate(args):
      args = list(args)
-     if not hasFlag(args, '-size'):
+     if not hasFlag(args, '-size') and hasFlag(args, '-fp'):
          args.append('-size=1024')
 
-     if not hasFlag(args, '-type'):
+     if not hasFlag(args, '-type') and (hasFlag(args,'-um') or hasFlag(args, '-fp')):
         raise ValueError("Preference function must be specified")
      os.system(' '.join(['./run'] + args))

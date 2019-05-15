@@ -8,12 +8,14 @@ def sort(argument):
     dataset = None
     partialPaths = []
     threads = 1
-    bucket_size = 0
+    bucket_size = height / max(1, (width * height * 8) / (1024 * 512 * 1024))
     for option in argument:
         if '-size=' in option:
             byte = int(option[6:])
             byte = byte * 512 * 1024
             total_buckets = (width * height * 8) / byte
+            if total_buckets == 0:
+                total_buckets = 1
             bucket_size = height / total_buckets
         if '-proc=' in option:
             threads = int(option[9:])
@@ -48,12 +50,14 @@ def unsort(argument):
     dataset = None
     partialPaths = []
     threads = 1
-    bucket_size = 0
+    bucket_size = height / max(1, (width * height * 8) / (1024 * 512 * 1024))
     for option in argument:
         if '-size=' in option:
             byte = int(option[6:])
             byte = byte * 512 * 1024
             total_buckets = (width * height * 8) / byte
+            if total_buckets == 0:
+                total_buckets = 1
             bucket_size = height / total_buckets
         if '-proc=' in option:
             threads = int(option[9:])
