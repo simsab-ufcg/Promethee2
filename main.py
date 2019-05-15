@@ -22,7 +22,6 @@ def main():
         if not exists:
             os.system("g++ caja/playground/src/merge.cpp -o caja/playground/src/merge -std=c++14 -ltiff")
         os.system(' '.join(['./caja/playground/src/merge'] + list(sys.argv[2:])))
-        os.system('mv /caja/playground/src/' + sys.argv[-1] + ' .')
     else:
         promethee_calculate.calculate(sys.argv[1:])
 
