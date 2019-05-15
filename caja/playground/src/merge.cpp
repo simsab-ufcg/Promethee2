@@ -15,21 +15,25 @@ void logger(string description){
 // ./run filename1 filename2 filename3 filename4
 int main(int argc, char* argv[]){
     logger("merge start");
-    TIFF* tifs[argc - 1];
+    TIFF* tifs[argc - 2];
+    if(argc <= 3){
+        cout << "Insufficient tiffs of input" << endl;
+        return 1;
+    }
 
-    for(int i = 1; i < argc; i++){
+    for(int i = 1; i < argc - 1; i++){
         cerr << "open " << string(argv[i]) << endl;
         tifs[i - 1] = TIFFOpen(argv[i], "rm");
     }
 
-    int ntiffs = argc - 1;
+    int ntiffs = argc - 2;
     int width, height, sampleperpixel;
 
     TIFFGetField(tifs[0], TIFFTAG_IMAGEWIDTH, &width);
     TIFFGetField(tifs[0], TIFFTAG_IMAGELENGTH, &height);
     TIFFGetField(tifs[0], TIFFTAG_SAMPLESPERPIXEL, &sampleperpixel);
 
-    TIFF *out = TIFFOpen("merged.tif", "w8m");
+    TIFF *out = TIFFOpen(argv[argc - 1], "w8m");
     TIFFSetField(out, TIFFTAG_IMAGEWIDTH     , width); 
     TIFFSetField(out, TIFFTAG_IMAGELENGTH    , height);
     TIFFSetField(out, TIFFTAG_BITSPERSAMPLE  , 64);
