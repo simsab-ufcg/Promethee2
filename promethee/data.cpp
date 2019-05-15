@@ -1,5 +1,5 @@
 #include "data.h"
-#include <math.h>
+#include <cmath>
 
 void Data::addCriteria(Matrix matrix, MatrixMetaData meta){
   matrices.push_back(matrix);
@@ -37,7 +37,7 @@ MaskMatrix Data::getMaskMatrix(){
   MaskMatrix mask = MaskMatrix(nlines, MaskMatrixLine(ncolumns, true));
   for(int line = 0; line < nlines; line++)
     for(int column = 0; column < ncolumns; column++)
-      if(isnan(matrices[0][line][column]))
+      if(isNaN(matrices[0][line][column]))
         mask[line][column] = false;
   return mask;
 }

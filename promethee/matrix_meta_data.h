@@ -4,7 +4,6 @@
     
     #include "types.h"
     #include "promethee_function_adapter.h"
-    #include "promethee_function.h"
     #include <string>
     #include <iostream>
     

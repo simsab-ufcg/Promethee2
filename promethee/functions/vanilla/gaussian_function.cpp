@@ -1,5 +1,5 @@
 #include "gaussian_function.h"
-#include <math.h>
+#include <cmath>
 
 ldouble GaussianComparator::getSigma(){
     return parameters[0];
