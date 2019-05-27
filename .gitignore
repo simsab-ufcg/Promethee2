@@ -1,4 +1,3 @@
-run
 .vscode/
 out/
 *.o
@@ -6,3 +5,8 @@ out/
 512
 1024
 2048
+*.out
+*.pyc
+test.sh
+run
+arguments 
