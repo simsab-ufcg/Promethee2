@@ -17,6 +17,8 @@ def main():
         for i in xrange(3, len(sys.argv)):
             param.append(sys.argv[i])
         promethee_sort.unsort(param)
+        os.system("rm *values*.tif")
+        os.system("rm *positions*.tif")
     elif '-merge' in sys.argv:
         exists = os.path.isfile('caja/playground/src/merge')
         if not exists:
