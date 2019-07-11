@@ -1,21 +1,24 @@
 #pragma once
 
-#include "types.h"
-#include <iostream>
-#include <string>
-#include <cmath>
-#include <string.h>
-#include <unistd.h>
-#include <sys/types.h>
+#include "utils.h"
 
-struct PixelReader{
+struct BufferManager{
 	uint16 sampleFormat;
 	uint8 byteSize;
-	tdata_t buffer;
+	uint32 width, height;
+	vector<tdata_t> buffer;
+	vector<bool> bitseti;
+	vector<int> positions;
+	vector<int> circular_queue;
+	int queue_pointer;
+	TIFF *input;
 
-	PixelReader();
-	PixelReader(uint16 _sampleFormat, uint8 _byteSize,tdata_t _buffer);
+	BufferManager();
+	BufferManager(string path, uint64 megaBytes);
 
-	ldouble readPixel(uint32 colunm);
-
+	ldouble read(uint32 row, uint32 colunm);
+	ldouble readPixel(uint32 row, uint32 colunm);
+	uint32 getWidth();
+	uint32 getHeight();
+	void close();
 };
