@@ -4,7 +4,7 @@
 
 struct BufferManager{
 	uint16 sampleFormat;
-	uint8 byteSize;
+	uint32 byteSize;
 	uint32 width, height;
 	vector<tdata_t> buffer;
 	vector<bool> bitseti;

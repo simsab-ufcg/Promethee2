@@ -18,9 +18,7 @@ BufferManager::BufferManager(string path, uint64 megaBytes){
 };
 
 ldouble BufferManager::read(uint32 row, uint32 colunm){
-	if(bitseti[row]){
-		return this->readPixel(positions[row], colunm);
-	}else{
+	if(!bitseti[row]){
 		uint32 curr = circular_queue[queue_pointer];
 		if(curr != -1){
 			bitseti[curr] = false;
@@ -33,8 +31,9 @@ ldouble BufferManager::read(uint32 row, uint32 colunm){
 		circular_queue[queue_pointer] = row;
 		queue_pointer++;
 		if(queue_pointer >= circular_queue.size())
-			queue_pointer = 0;
+			queue_pointer = 0;	
 	}
+	return this->readPixel(positions[row], colunm);
 }
 
 ldouble BufferManager::readPixel(uint32 row, uint32 colunm){
