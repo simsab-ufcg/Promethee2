@@ -5,7 +5,7 @@
 #include "../utils.h"
 #include <map>
 #include "../external_sort.h"
-#include "../buffer_manage.h"
+#include "../buffer_manager.h"
 
 /**
  * Structure of promethee fast
