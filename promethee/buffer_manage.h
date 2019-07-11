@@ -8,10 +8,6 @@
 #include <unistd.h>
 #include <sys/types.h>
 
-/*
-	Pixel Reader is deprecated
- */
-
 struct PixelReader{
 	uint16 sampleFormat;
 	uint8 byteSize;
@@ -23,6 +19,3 @@ struct PixelReader{
 	ldouble readPixel(uint32 colunm);
 
 };
-
-bool isNaN(ldouble x);
-void logger(string description);
