@@ -11,7 +11,7 @@ BufferManager::BufferManager(string path, uint64 megaBytes){
 	bitseti = vector<bool>(this->height, false);
 	positions = vector<int>(this->height, -1);
 	megaBytes *= 1000 * 250; // change to bytes
-	uint32 qtd_store = megaBytes / TIFFScanlineSize(input); // how much lines can store in ram?
+	qtd_store = megaBytes / TIFFScanlineSize(input); // how much lines can store in ram?
 	circular_queue = vector<int>(qtd_store, -1);
 	buffer = vector<tdata_t>(qtd_store, NULL);
 	queue_pointer = 0;
@@ -97,7 +97,7 @@ uint32 BufferManager::getWidth(){
 }
 
 void BufferManager::close(){
-	for(int i = this->height - 1; i >= 0; i--){
+	for(int i = qtd_store - 1; i >= 0; i--){
 		if(circular_queue[i] != -1)
 			_TIFFfree(buffer[i]);
 	}

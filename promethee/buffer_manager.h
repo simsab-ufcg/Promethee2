@@ -11,6 +11,7 @@ struct BufferManager{
 	vector<int> positions;
 	vector<int> circular_queue;
 	int queue_pointer;
+	uint32 qtd_store;
 	TIFF *input;
 
 	BufferManager();
