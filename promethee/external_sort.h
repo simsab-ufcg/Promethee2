@@ -10,7 +10,7 @@
 
 
 struct ExternalSort {
-
+    
     string path, positions;
     long long megaBytes, bucketAmount, bucketSize;
     TIFF *input, *output;

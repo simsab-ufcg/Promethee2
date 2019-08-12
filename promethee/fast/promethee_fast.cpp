@@ -147,7 +147,7 @@ void PrometheeFast::process() {
     TIFFSetField(output, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(output, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(output, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(output, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(output, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, end - start));
     TIFFSetField(output, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(output, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(output, TIFFTAG_YRESOLUTION    , 1);

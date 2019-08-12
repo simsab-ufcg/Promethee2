@@ -7,33 +7,40 @@ BufferManager::BufferManager(string path, uint64 megaBytes){
   	TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
 	TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
 	TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
-	this->byteSize = TIFFScanlineSize(input) / this->width;
-	bitseti = vector<bool>(this->height, false);
-	positions = vector<int>(this->height, -1);
+	this->byteSize = TIFFStripSize64(this->input) / (this->width * 1LL * SIZESTRIP);
+	bitseti = vector<bool>(TIFFNumberOfStrips(this->input), false);
+	positions = vector<int>(TIFFNumberOfStrips(this->input), -1);
 	megaBytes *= 1000 * 250; // change to bytes
-	qtd_store = megaBytes / TIFFScanlineSize(input); // how much lines can store in ram?
+	qtd_store = megaBytes / TIFFStripSize64(this->input); // how much lines can store in ram?
+	if(qtd_store == 0){
+		cerr << "Low memory" << endl;
+		exit(1);
+	}
 	circular_queue = vector<int>(qtd_store, -1);
 	buffer = vector<tdata_t>(qtd_store, NULL);
 	queue_pointer = 0;
 };
 
 ldouble BufferManager::read(uint32 row, uint32 colunm){
-	if(!bitseti[row]){
+	tstrip_t stripNeeded = row / SIZESTRIP;
+	if(!bitseti[stripNeeded]){
 		uint32 curr = circular_queue[queue_pointer];
 		if(curr != -1){
 			bitseti[curr] = false;
 		}else{
-			buffer[queue_pointer] = _TIFFmalloc(TIFFScanlineSize(this->input));
+			buffer[queue_pointer] = _TIFFmalloc(TIFFStripSize64(this->input));
 		}
-		bitseti[row] = true;
-		positions[row] = queue_pointer;
-		TIFFReadScanline(input, buffer[queue_pointer], row);
-		circular_queue[queue_pointer] = row;
+		bitseti[stripNeeded] = true;
+		positions[stripNeeded] = queue_pointer;
+		TIFFReadEncodedStrip(input, stripNeeded, buffer[queue_pointer], (tsize_t) -1);
+		circular_queue[queue_pointer] = stripNeeded;
 		queue_pointer++;
 		if(queue_pointer >= circular_queue.size())
 			queue_pointer = 0;	
 	}
-	return this->readPixel(positions[row], colunm);
+	row %= SIZESTRIP;
+	colunm = (row * this->width) + colunm;
+	return this->readPixel(positions[stripNeeded], colunm);
 }
 
 ldouble BufferManager::readPixel(uint32 row, uint32 colunm){

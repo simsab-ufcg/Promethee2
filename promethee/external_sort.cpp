@@ -122,7 +122,7 @@
     TIFFSetField(values, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(values, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(values, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(values, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(values, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, end - start));
     TIFFSetField(values, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(values, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(values, TIFFTAG_YRESOLUTION    , 1);
@@ -137,7 +137,7 @@
     TIFFSetField(positions, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(positions, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(positions, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(positions, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(positions, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, end - start));
     TIFFSetField(positions, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(positions, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(positions, TIFFTAG_YRESOLUTION    , 1);
@@ -178,7 +178,7 @@
     TIFFSetField(this->input, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(this->input, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(this->input, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(this->input, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(this->input, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, height));
     TIFFSetField(this->input, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(this->input, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(this->input, TIFFTAG_YRESOLUTION    , 1);
@@ -193,7 +193,7 @@
     TIFFSetField(this->output, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(this->output, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(this->output, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, height));
     TIFFSetField(this->output, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(this->output, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(this->output, TIFFTAG_YRESOLUTION    , 1);
@@ -325,7 +325,7 @@
     TIFFSetField(values, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(values, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(values, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(values, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(values, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, end - start));
     TIFFSetField(values, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(values, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(values, TIFFTAG_YRESOLUTION    , 1);
@@ -340,7 +340,7 @@
     TIFFSetField(positions, TIFFTAG_PHOTOMETRIC    , 1);
     TIFFSetField(positions, TIFFTAG_ORIENTATION    , 1);
     TIFFSetField(positions, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(positions, TIFFTAG_ROWSPERSTRIP   , 1);
+    TIFFSetField(positions, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, end - start));
     TIFFSetField(positions, TIFFTAG_RESOLUTIONUNIT , 1);
     TIFFSetField(positions, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(positions, TIFFTAG_YRESOLUTION    , 1);
