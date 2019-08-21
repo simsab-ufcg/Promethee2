@@ -110,7 +110,7 @@ void PrometheeFast::process() {
 
 	// Open input and get fields need to create similar file for output
 	std::cout << "Open file..." << std::endl;
-	image = BufferManager(filename, 1024);
+	image = BufferManager(filename, TODO_CONSTANT); //  TODO: Change 1024 hardcoded
 	std::cout << "File opened." << std::endl;
 
 

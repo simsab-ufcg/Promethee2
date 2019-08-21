@@ -7,7 +7,8 @@ BufferManager::BufferManager(string path, uint64 megaBytes){
   	TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
 	TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
 	TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
-	this->byteSize = TIFFStripSize64(this->input) / (this->width * 1LL * SIZESTRIP);
+	TIFFGetField(input, TIFFTAG_ROWSPERSTRIP, &this->rowperstrip);
+	this->byteSize = TIFFStripSize64(this->input) / (rowperstrip * this->width);
 	bitseti = vector<bool>(TIFFNumberOfStrips(this->input), false);
 	positions = vector<int>(TIFFNumberOfStrips(this->input), -1);
 	megaBytes *= 1000 * 250; // change to bytes
@@ -22,7 +23,7 @@ BufferManager::BufferManager(string path, uint64 megaBytes){
 };
 
 ldouble BufferManager::read(uint32 row, uint32 colunm){
-	tstrip_t stripNeeded = row / SIZESTRIP;
+	tstrip_t stripNeeded = row / rowperstrip;
 	if(!bitseti[stripNeeded]){
 		uint32 curr = circular_queue[queue_pointer];
 		if(curr != -1){
@@ -38,7 +39,7 @@ ldouble BufferManager::read(uint32 row, uint32 colunm){
 		if(queue_pointer >= circular_queue.size())
 			queue_pointer = 0;	
 	}
-	row %= SIZESTRIP;
+	row %= (this->height / TIFFNumberOfStrips(this->input));
 	colunm = (row * this->width) + colunm;
 	return this->readPixel(positions[stripNeeded], colunm);
 }

@@ -6,6 +6,7 @@ struct BufferManager{
 	uint16 sampleFormat;
 	uint32 byteSize;
 	uint32 width, height;
+	uint32 rowperstrip;
 	vector<tdata_t> buffer;
 	vector<bool> bitseti;
 	vector<int> positions;

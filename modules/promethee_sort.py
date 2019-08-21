@@ -40,9 +40,11 @@ def sort(argument):
         start = start + bucket_size
     xargs_argument = None
     os.system('cat arguments | xargs -P ' + str(threads) + ' -n 4 ./run')
+    print 'start kway'
     a = ' '.join(['./run', '-sort', argument[1], 'positions.tif', '-kway '])
     b = ' '.join(partialPaths)
     os.system(a + b)
+    print 'end kway'
 
 def unsort(argument):
     dataset = gdal.Open(argument[1])
@@ -82,6 +84,8 @@ def unsort(argument):
         start = start + bucket_size
     xargs_argument = None
     os.system('cat arguments | xargs -P ' + str(threads) + ' -n 6 ./run')
+    print 'start kway'
     a = ' '.join(['./run', '-sort','positions.tif', argument[1], '-kway '])
     b = ' '.join(partialPaths)
     os.system(a + b)
+    print 'end kway'

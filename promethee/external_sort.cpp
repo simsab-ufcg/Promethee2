@@ -33,11 +33,10 @@
 		this->end = atoi(end.c_str());
 	}
 
-	this->input = TIFFOpen(this->path.c_str(), "rm");
-    TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
-    TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
-	TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
-    TIFFClose(this->input);
+	this->input = BufferManager(this->path, TODO_CONSTANT);
+    this->width = input.getWidth();
+    this->height = input.getHeight();
+    this->input.close();
 
     this->start = max(0, min(this->start, this->height));
     this->end = max(this->start, min(this->end, this->height));
@@ -60,53 +59,33 @@
 
  }
 
- void ExternalSort::fillBuffer(TIFF *dataset, ldouble buffer[], PixelReader &pr, int line, int &size){
-    int total;
-    TIFFGetField(dataset, TIFFTAG_IMAGELENGTH, &total);
-    int idx = 0;
-    size = min(size, total - line);
-    for(register int a = 0; a < size; a++){
-        TIFFReadScanline(dataset, pr.buffer, line + a);
-        for(register int i = 0; i < this->width; i++)
-		    buffer[idx++] = pr.readPixel(i);
-    }
-
- }
-
  void ExternalSort::sort(){
-    this->input = TIFFOpen(this->path.c_str(), "rm");
-    TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
-    TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
-    TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
+    this->input = BufferManager(this->path, TODO_CONSTANT);
+    this->width = input.getWidth();
+    this->height = input.getHeight();
     this->parcialSort(this->start, this->end);
-    TIFFClose(this->input);
+    this->input.close();
  }
 
  void ExternalSort::reverse(){
-    this->input = TIFFOpen(this->positions.c_str(), "rm");
-    TIFFGetField(input, TIFFTAG_IMAGEWIDTH, &this->width);
-    TIFFGetField(input, TIFFTAG_IMAGELENGTH, &this->height);
-    TIFFGetField(input, TIFFTAG_SAMPLEFORMAT, &this->sampleFormat);
-    this->output = TIFFOpen(this->path.c_str(), "rm");
+    this->input = BufferManager(this->positions, TODO_CONSTANT);
+    this->width = this->input.getWidth();
+    this->height = this->input.getHeight();
+    this->output = BufferManager(this->path, TODO_CONSTANT);
     vector< pair < ldouble, ldouble > > segment;
-    { // main memory economy
-        unsigned short byte_size = TIFFScanlineSize(this->input) / this->width;
-        tdata_t line = _TIFFmalloc(TIFFScanlineSize(this->input));
-        PixelReader pr = PixelReader(this->sampleFormat, byte_size, line);
-        ldouble bufferValue[this->width];
-        ldouble bufferNumber[this->width];
+    { // memory economy
         ldouble firstValue = this->start * this->width;
         int size = 1;
         int s2 = 1;
 
         for(int i = this->start; i < this->end; i++){
-            fillBuffer(this->input, bufferValue, pr, i, size);
-            fillBuffer(this->output, bufferNumber, pr, i, s2);
-            for(int j = 0; j < this->width; j++){ 
-                segment.push_back( {bufferValue[j], bufferNumber[j]} );
+            for(int j = 0; j < this->width; j++){
+                segment.push_back( {this->input.read(i, j), this->output.read(i, j)} );
             }
         }
     }
+    this->input.close();
+    this->output.close();
 
     std::sort(segment.begin(), segment.end());
 
@@ -157,64 +136,44 @@
         TIFFWriteScanline(values, output_value, i);
         TIFFWriteScanline(positions, output_position, i);
     }
-
-    free(output_value);
-    free(output_position);
     TIFFClose(values);
     TIFFClose(positions);
-
-    TIFFClose(this->input);
-    TIFFClose(this->output);
  }
 
 
  void ExternalSort::k_wayMergesort(vector < pair < string, string> > paths){
-    this->input = TIFFOpen(this->path.c_str(), "w8m");
-    TIFFSetField(this->input, TIFFTAG_IMAGEWIDTH     , width); 
-    TIFFSetField(this->input, TIFFTAG_IMAGELENGTH    , height);
-    TIFFSetField(this->input, TIFFTAG_BITSPERSAMPLE  , 64);
-    TIFFSetField(this->input, TIFFTAG_SAMPLEFORMAT   , 3);
-    TIFFSetField(this->input, TIFFTAG_COMPRESSION    , 1);
-    TIFFSetField(this->input, TIFFTAG_PHOTOMETRIC    , 1);
-    TIFFSetField(this->input, TIFFTAG_ORIENTATION    , 1);
-    TIFFSetField(this->input, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(this->input, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, height));
-    TIFFSetField(this->input, TIFFTAG_RESOLUTIONUNIT , 1);
-    TIFFSetField(this->input, TIFFTAG_XRESOLUTION    , 1);
-    TIFFSetField(this->input, TIFFTAG_YRESOLUTION    , 1);
-    TIFFSetField(this->input, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
+    TIFF *valuesO = TIFFOpen(this->path.c_str(), "w8m");
+    TIFFSetField(valuesO, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(valuesO, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(valuesO, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(valuesO, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(valuesO, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(valuesO, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(valuesO, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(valuesO, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(valuesO, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, height));
+    TIFFSetField(valuesO, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(valuesO, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(valuesO, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(valuesO, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
-    this->output = TIFFOpen(this->positions.c_str(), "w8m");
-    TIFFSetField(this->output, TIFFTAG_IMAGEWIDTH     , width); 
-    TIFFSetField(this->output, TIFFTAG_IMAGELENGTH    , height);
-    TIFFSetField(this->output, TIFFTAG_BITSPERSAMPLE  , 64);
-    TIFFSetField(this->output, TIFFTAG_SAMPLEFORMAT   , 3);
-    TIFFSetField(this->output, TIFFTAG_COMPRESSION    , 1);
-    TIFFSetField(this->output, TIFFTAG_PHOTOMETRIC    , 1);
-    TIFFSetField(this->output, TIFFTAG_ORIENTATION    , 1);
-    TIFFSetField(this->output, TIFFTAG_SAMPLESPERPIXEL, 1);
-    TIFFSetField(this->output, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, height));
-    TIFFSetField(this->output, TIFFTAG_RESOLUTIONUNIT , 1);
-    TIFFSetField(this->output, TIFFTAG_XRESOLUTION    , 1);
-    TIFFSetField(this->output, TIFFTAG_YRESOLUTION    , 1);
-    TIFFSetField(this->output, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
+    TIFF *positionsO = TIFFOpen(this->positions.c_str(), "w8m");
+    TIFFSetField(positionsO, TIFFTAG_IMAGEWIDTH     , width); 
+    TIFFSetField(positionsO, TIFFTAG_IMAGELENGTH    , height);
+    TIFFSetField(positionsO, TIFFTAG_BITSPERSAMPLE  , 64);
+    TIFFSetField(positionsO, TIFFTAG_SAMPLEFORMAT   , 3);
+    TIFFSetField(positionsO, TIFFTAG_COMPRESSION    , 1);
+    TIFFSetField(positionsO, TIFFTAG_PHOTOMETRIC    , 1);
+    TIFFSetField(positionsO, TIFFTAG_ORIENTATION    , 1);
+    TIFFSetField(positionsO, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(positionsO, TIFFTAG_ROWSPERSTRIP   , min(SIZESTRIP, height));
+    TIFFSetField(positionsO, TIFFTAG_RESOLUTIONUNIT , 1);
+    TIFFSetField(positionsO, TIFFTAG_XRESOLUTION    , 1);
+    TIFFSetField(positionsO, TIFFTAG_YRESOLUTION    , 1);
+    TIFFSetField(positionsO, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
 
-     TIFF *values[paths.size()];
-     TIFF *positions[paths.size()];
-     
-     int sizeMultiplier = 6;
-
-     tdata_t line = _TIFFmalloc((sizeof (ldouble)) * this->width);
-     PixelReader pr = PixelReader(this->sampleFormat, sizeof (ldouble), line);
-
-     ldouble *bufferV[paths.size()];
-     ldouble *bufferP[paths.size()];
-
-
-     for(int i = 0; i < paths.size(); i++){
-         bufferV[i] = (ldouble*)malloc(sizeof (ldouble) * this->width * sizeMultiplier);
-         bufferP[i] = (ldouble*)malloc(sizeof (ldouble) * this->width * sizeMultiplier);
-     }
+     BufferManager values[paths.size()];
+     BufferManager positions[paths.size()];
 
      typedef pair < pair <ldouble, ldouble >, int > reduct;
 
@@ -222,7 +181,6 @@
 
      int pointersX[paths.size()], pointersY[paths.size()];
      int size[paths.size()];
-     int endBuffer[paths.size()];
 
      ldouble orderData[this->width];
      ldouble orderPosition[this->width];
@@ -230,20 +188,13 @@
      int posY = 0;
 
      for(int i = 0; i < paths.size(); i++){
-         values[i] = TIFFOpen(paths[i].first.c_str(), "rm");
-         positions[i] = TIFFOpen(paths[i].second.c_str(), "rm");
+         values[i] = BufferManager(paths[i].first.c_str(), TODO_CONSTANT / paths.size());
+         positions[i] = BufferManager(paths[i].second.c_str(), TODO_CONSTANT / paths.size());
          pointersX[i] = 0;
          pointersY[i] = 0;
          
-         TIFFGetField(values[i], TIFFTAG_IMAGELENGTH, &size[i]);
-
-         endBuffer[i] = sizeMultiplier;
-         
-         fillBuffer(values[i], bufferV[i], pr, pointersY[i], endBuffer[i]);
-         fillBuffer(positions[i], bufferP[i], pr, pointersY[i], endBuffer[i]);
-         pointersY[i] += endBuffer[i];
-
-         pq.push( {{bufferV[i][pointersX[i]], bufferP[i][pointersX[i]]}, i} );
+         size[i] = values[i].getHeight();
+         pq.push( {{values[i].read(pointersX[i], pointersY[i]), positions[i].read(pointersX[i], pointersY[i])}, i} );
          pointersX[i]++;
      }
      while(!pq.empty()){
@@ -253,65 +204,47 @@
          orderData[posX] = curr.first.first;
          orderPosition[posX++] = curr.first.second;
          if(posX == this->width){
-
-            TIFFWriteScanline(this->input, orderData, posY);
-            TIFFWriteScanline(this->output, orderPosition, posY++);
+            TIFFWriteScanline(valuesO, orderData, posY);
+            TIFFWriteScanline(positionsO, orderPosition, posY++);
             posX = 0;
-
          }
 
          int i = curr.second;
 
-         if((pointersX[i] == (this->width * endBuffer[i])) && pointersY[i] == size[i])
+         if(pointersX[i] == this->width && pointersY[i] == size[i])
             continue;
 
-         pq.push({{bufferV[i][pointersX[i]], bufferP[i][pointersX[i]]}, i});
+         pq.push({{values[i].read(pointersX[i], pointersY[i]), positions[i].read(pointersX[i], pointersY[i])}, i});
          pointersX[i]++;
-
-         if(pointersX[i] == (this->width * endBuffer[i])){
+         if(pointersX[i] == this->width){
              pointersX[i] = 0;
              if(pointersY[i] < size[i]){
-
-                fillBuffer(values[i], bufferV[i], pr, pointersY[i], endBuffer[i]);
-                fillBuffer(positions[i], bufferP[i], pr, pointersY[i], endBuffer[i]);
-                pointersY[i] += endBuffer[i];
-
-             }else pointersX[i] = this->width * endBuffer[i];
+                pointersY[i] ++;
+             }else pointersX[i] = this->width;
          }
-        
      }
      for(int i = paths.size() - 1; i >= 0; i--){
-         free(bufferV[i]);
-         free(bufferP[i]);
-	     TIFFClose(values[i]);
-         TIFFClose(positions[i]);
+	     values[i].close();
+         positions[i].close();
      }
 
-     TIFFClose(this->input);
-     TIFFClose(this->output);
+     TIFFClose(valuesO);
+     TIFFClose(positionsO);
  }
 
  pair < string, string> ExternalSort::parcialSort(int start, int end){
     
     vector< pair < ldouble, ldouble > > segment;
-
-    { // main memory economy
-        unsigned short byte_size = TIFFScanlineSize(this->input) / this->width;
-        tdata_t line = _TIFFmalloc(TIFFScanlineSize(this->input));
-        PixelReader pr = PixelReader(this->sampleFormat, byte_size, line);
-        ldouble bufferValue[this->width];
+    { // memory economy
         ldouble firstValue = this->start * this->width;
         int size = 1;
-
         for(int i = this->start; i < this->end; i++){
-            fillBuffer(this->input, bufferValue, pr, i, size);
-            for(int j = 0; j < this->width; j++){ 
-                segment.push_back( {bufferValue[j], firstValue++} );
+            for(int j = 0; j < this->width; j++){
+                segment.push_back( {this->input.read(i, j), firstValue++} );
             }
         }
     }
     std::sort(segment.begin(), segment.end());
-
 
     string nameParcialValue = "values." + to_string(start) + "-" + to_string(end) + "." + this->path;
     string nameParcialPositions = "positions." + to_string(start) + "-" + to_string(end) + "." + this->path;
@@ -330,7 +263,7 @@
     TIFFSetField(values, TIFFTAG_XRESOLUTION    , 1);
     TIFFSetField(values, TIFFTAG_YRESOLUTION    , 1);
     TIFFSetField(values, TIFFTAG_PLANARCONFIG   , PLANARCONFIG_CONTIG   );
-
+    
     TIFF *positions = TIFFOpen(nameParcialPositions.c_str(), "w8m");
     TIFFSetField(positions, TIFFTAG_IMAGEWIDTH     , this->width); 
     TIFFSetField(positions, TIFFTAG_IMAGELENGTH    , end - start);

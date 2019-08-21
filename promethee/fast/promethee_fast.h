@@ -22,7 +22,7 @@ struct PrometheeFast : Promethee {
     double p, q; // Arguments of promethee function
     ExternalSort es;
 
-
+    const int TODO_CONSTANT = 1024;
     // info related to criterion file
     int height, width;
 

@@ -20,7 +20,7 @@
 
   const ldouble NAN = std::numeric_limits<ldouble>::quiet_NaN();
 
-  const int SIZESTRIP = 500;
+  const int SIZESTRIP = 10;
 
   struct PrometheeResult{
     Matrix positiveFlow;
