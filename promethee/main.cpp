@@ -42,7 +42,6 @@ int main(int argc, char *argv[]){
     es.main(args);
     return 0;
   }
-
   res->init(args, divideBy);
   res->process();
   return 0;
