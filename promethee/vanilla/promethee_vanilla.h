@@ -11,6 +11,8 @@
   #include <algorithm>
   
   struct PrometheeVanilla : Promethee {
+    Data data;
+
     Data readData();
     void process();
     void init(vector<string> args, int divideBy);

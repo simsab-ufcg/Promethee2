@@ -63,7 +63,7 @@
  void ExternalSort::fillBuffer(TIFF *dataset, ldouble buffer[], PixelReader &pr, int line, int &size){
     int total;
     TIFFGetField(dataset, TIFFTAG_IMAGELENGTH, &total);
-    int idx = 0;
+    long long idx = 0;
     size = min(size, total - line);
     for(register int a = 0; a < size; a++){
         TIFFReadScanline(dataset, pr.buffer, line + a);
@@ -300,7 +300,7 @@
         tdata_t line = _TIFFmalloc(TIFFScanlineSize(this->input));
         PixelReader pr = PixelReader(this->sampleFormat, byte_size, line);
         ldouble bufferValue[this->width];
-        ldouble firstValue = this->start * this->width;
+        ldouble firstValue = (long long)this->start * (long long)this->width;
         int size = 1;
 
         for(int i = this->start; i < this->end; i++){

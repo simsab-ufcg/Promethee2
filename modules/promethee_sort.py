@@ -18,7 +18,7 @@ def sort(argument):
                 total_buckets = 1
             bucket_size = height / total_buckets
         if '-proc=' in option:
-            threads = int(option[9:])
+            threads = int(option[6:])
 
     if bucket_size == 0:
         print 'Size of sort invalid.'
@@ -60,7 +60,7 @@ def unsort(argument):
                 total_buckets = 1
             bucket_size = height / total_buckets
         if '-proc=' in option:
-            threads = int(option[9:])
+            threads = int(option[6:])
             
     if bucket_size == 0:
         print 'Size of sort invalid.'
