@@ -59,6 +59,19 @@
 
  }
 
+ void ExternalSort::fillBuffer(TIFF *dataset, ldouble buffer[], PixelReader &pr, int line, int &size){
+    int total;
+    TIFFGetField(dataset, TIFFTAG_IMAGELENGTH, &total);
+    int idx = 0;
+    size = min(size, total - line);
+    for(register int a = 0; a < size; a++){
+        TIFFReadScanline(dataset, pr.buffer, line + a);
+        for(register int i = 0; i < this->width; i++)
+		    buffer[idx++] = pr.readPixel(i);
+    }
+
+ }
+
  void ExternalSort::sort(){
     this->input = BufferManager(this->path, TODO_CONSTANT);
     this->width = input.getWidth();
@@ -235,8 +248,13 @@
  pair < string, string> ExternalSort::parcialSort(int start, int end){
     
     vector< pair < ldouble, ldouble > > segment;
-    { // memory economy
-        ldouble firstValue = this->start * this->width;
+
+    { // main memory economy
+        unsigned short byte_size = TIFFScanlineSize(this->input) / this->width;
+         tdata_t line = _TIFFmalloc(TIFFScanlineSize(this->input));
+         PixelReader pr = PixelReader(this->sampleFormat, byte_size, line);
+        ldouble firstValue = (long long)this->start * (long long)this->width;
+        ldouble bufferValue[this->width];
         int size = 1;
         for(int i = this->start; i < this->end; i++){
             for(int j = 0; j < this->width; j++){
