@@ -1,7 +1,7 @@
 ---
 name: Report a problem.
 about: Report a problem or bug in Promethee.
-labels: Promethee implementation
+labels: ""
 ---
 
 <!-- Explain what you did (or tried to) and compare the result with the expected result. -->

@@ -1,9 +1,7 @@
 ---
-name: Requisição de funcionaliade nova
-about: Peça uma nova funcionalidade para o projeto
-title: ""
+name: New feature.
+about: Request a new feature to Promethee2.
 labels: ""
-assignees: ""
 ---
 
 **Feature description**
