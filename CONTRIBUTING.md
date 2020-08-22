@@ -1,43 +1,41 @@
 # CONTRIBUTING
 
-Contribuições sempre serão bem vindas, sejam pequenas ou grandes. Leia o nosso [código de conduta](CODE_OF_CONDUCT.md) antes de abrir qualquer issue ou pull request.
+Contributions are always welcome, despite its size. Read our [code of conduct](CODE_OF_CONDUCT.md) before opening an issue or pull request.
 
 ## Issues
 
-As issues são um espaço aberto para requisitar novas funcionalidades, mudança ou conserto. Também pode ser usadas como espaço para tirar dúvidas ou discutir ideias.
+Issues are an open space for requesting new features, changes of fixes.
+You can also use them to ask questions and to discuss ideas.
 
 ### Labels
 
-Usamos algumas classificações para categorizar as issues, veja:
+We use labels to categorize issues, see below:
 
-- **Bug** - Alerta sobre algum bug relacionado às implementações de código.
-- **Congelado** - A issue está temporariamente inativa, será retomada futuramente.
-- **Discussão** - Indica que a issue foi aberta com a finalidade de se discutir um assunto. Qualquer um pode participar.
-- **Duplicado** - Alerta de que a issue atual é idêntica (ou muito semelhante) a uma já existente.
-- **Em andamento** - Indica que as atividades requisitadas pela issue já estão sendo executadas.
-- **Feature** - Indica que a issue está relacionada a uma nova funcionalidade ou nova requisição de material.
-- **good first issue** - Indica que a issue é de dificuldade relativamente simples, um bom começo para novos contribuintes.
-- **Precisa de ajuda** - Indica que se precisa de ajuda para resolver o tópico da issue.
-- **Descontinuado** - Indica que o tópico da issue foi descontinuado e não será retomado.
+- **bug** - Issue related to a bug.
+- **frozen** - The issue is inactive and will become active again sometime.
+- **discussion** - The issue was opened to discuss something (anyone can join).
+- **duplicate** - Indicates the issue is a duplicate of other open issue.
+- **work-in-progress** - The issue related work has started.
+- **feature** - Feature request or related to a requested feature.
+- **good first issue** - The feature is easy to solve and do not require deep internal knowledge. It's a good start for new contributors.
+- **help wanted** - Denotes an issue that needs help from a contributor.
+- **unresoved** - Indicates an issue that can not or will not be resolved.
 
-## Contribuir
+## CONTRIBUTING
 
-Você pode contribuir tanto sugerindo novas ideias em nossas issues ou no canal **#lsd** no [Discord da OpenDevUFCG](https://chat.opendevufcg.org/), como também criando um _fork_ do repositório e submetendo um _Pull Request_ para melhorar nosso conteúdo e código.
+You can contribute by requesting features in a new issue, in channel **#lsd** on [OpenDevUFCG Discord server](https://discord.gg/gSd32g9), or submitting a _Pull Request_ that closes an existing issue.
 
-## Contribuir
+### Good habits
 
-Deseja contribuir? Ficamos muito felizes! Aqui vai alguma dicas e regras que você deve ter em mente.
+Want to open a *Pull Request*? We are glad you want to contribute! Here are some tips and rules you should be aware:
 
-### Boas práticas
+1. Create a [branch](https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging) in your *Fork* with a descriptive name!
+2. Be objective in your commits. Commit messages should summarize its changes.
+3. Fill the **PR** template, it will help us understand your changes.
+4. If you are addressing an issue, send there your progress.
+5. If you are not addressing an issue, consider opening an issue for it.
+6. Be open to suggestions, as so are we!
 
-Já está pronto para abrir um *Pull Request*? Ótimo! Aqui vão algumas dicas de boas práticas para ajudar o processo de revisão:
+## Questions or suggestions?
 
-1. Crie uma [branch](https://git-scm.com/book/pt-br/v1/Ramifica%C3%A7%C3%A3o-Branching-no-Git-B%C3%A1sico-de-Branch-e-Merge) no seu *Fork*, com um nome descritivo!
-2. Seja claro nos seus commits! Não precisa ser longo, uma frase descritiva do seu trabalho está ótimo!
-3. Siga nossos conselhos de como preencher sua **PR**, vai nos ajudar a entender o que você fez!
-4. Se você fez baseado numa issue, referencie ela!
-5. Esteja aberto a sugestões, assim como estaremos também!
-
-## Dúvidas ou sugestões?
-
-Dúvidas e sugestões são sempre bem vindas! Estamos sempre respondendo issues e também falando no canal **#lsd** no [discord](https://chat.opendevufcg.org/)!
+Questions and suggestions are welcome! We are always addressing them in issues and in our [Discord channel](https://discord.gg/gSd32g9) **#lsd**!
