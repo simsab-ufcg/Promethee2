@@ -1,6 +1,9 @@
 #### Objective
 
-<!-- Describe what are you changing in the code. -->
+<!-- Describe what are you changing in the code and mark the type of change. -->
+[ ] Breaking change
+[ ] Non-breaking feature
+[ ] Bug fix
 
 #### Motivation
 
